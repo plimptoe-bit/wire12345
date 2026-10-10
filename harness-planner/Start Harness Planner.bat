@@ -1,5 +1,5 @@
 @echo off
-rem Double-click me (Windows). Starts the Harness Planner XP interface in
+rem Double-click me (Windows). Starts the Harness Planner 98 interface in
 rem your browser. Needs Python 3.11+ from python.org ("Add to PATH" ticked).
 cd /d "%~dp0"
 where py >nul 2>nul && (py -3 -m harness_planner gui & goto end)

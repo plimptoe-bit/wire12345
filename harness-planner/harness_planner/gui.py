@@ -1,4 +1,4 @@
-"""Clickable interface: a local web app styled like a Windows XP application.
+"""Clickable interface: a local web app styled like a Windows 98 application.
 
     python3 -m harness_planner gui            # starts on http://127.0.0.1:8321
                                               # and opens the browser
@@ -7,7 +7,7 @@ The server binds to localhost only and drives the same engine as the CLI:
 list programs, run checks, confirm checkpoints, generate deliverables, and
 view/download every output. The page itself is harness_planner/gui/index.html;
 `tools/build_demo.py` packs the same page with the example outputs into a
-standalone double-clickable HarnessPlannerXP.html.
+standalone double-clickable HarnessPlanner98.html.
 """
 from __future__ import annotations
 
@@ -252,7 +252,7 @@ def serve(roots: list[Path], inventory: Path | None = None,
     _Handler.backend = Backend(roots, inventory)
     httpd = ThreadingHTTPServer(("127.0.0.1", port), _Handler)
     url = f"http://127.0.0.1:{httpd.server_address[1]}/"
-    print(f"Harness Planner XP running at {url}  (Ctrl+C to quit)")
+    print(f"Harness Planner 98 running at {url}  (Ctrl+C to quit)")
     if open_browser:
         threading.Timer(0.4, webbrowser.open, args=(url,)).start()
     return httpd

@@ -211,7 +211,7 @@ def main(argv=None):
     p.add_argument("--skip-pdf", action="store_true")
     p.set_defaults(func=cmd_generate)
 
-    p = sub.add_parser("gui", help="clickable Windows XP-style interface")
+    p = sub.add_parser("gui", help="clickable Windows 98-style interface")
     p.add_argument("roots", nargs="*", default=None,
                    help="directories to scan for programs (default: "
                         "data/fixtures and the current directory)")

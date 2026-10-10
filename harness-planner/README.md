@@ -11,9 +11,9 @@ with every number traceable to a cited source.
 
 ## Clickable interface (no terminal needed)
 
-Two ways in, both styled like a Windows XP application:
+Two ways in, both styled like a Windows 98 application:
 
-- **Just looking?** Open `HarnessPlannerXP.html` in any browser (double-click
+- **Just looking?** Open `HarnessPlanner98.html` in any browser (double-click
   it). It is fully self-contained — the two example programs' deliverables,
   findings and formboards are packed inside. No install.
 - **Working?** Double-click `Start Harness Planner.bat` (Windows) or

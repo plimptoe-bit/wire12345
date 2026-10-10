@@ -1,6 +1,6 @@
 """Pack the GUI and the example outputs into one double-clickable HTML file.
 
-    python3 tools/build_demo.py            # writes ../HarnessPlannerXP.html
+    python3 tools/build_demo.py            # writes ../HarnessPlanner98.html
 
 The result is the same page the `gui` command serves, with the example
 programs' generated deliverables embedded (demo mode): open it in any browser
@@ -94,7 +94,7 @@ def pack_program(pid: str, fixture_dir: Path, examples_dir: Path,
 
 
 def build(out_path: Path | None = None) -> Path:
-    out_path = out_path or ROOT / "HarnessPlannerXP.html"
+    out_path = out_path or ROOT / "HarnessPlanner98.html"
     inv = Inventory.load(ROOT / "data" / "tool_inventory.csv")
     data = {"programs": [pack_program(pid, fx, ex, inv)
                          for pid, fx, ex in PROGRAMS if ex.exists()]}
