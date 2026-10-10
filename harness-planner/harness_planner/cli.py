@@ -61,12 +61,18 @@ def cmd_confirm(args):
     print(cps.summary_markdown())
 
 
-def cmd_generate(args):
-    program_dir = Path(args.program_dir)
-    out_dir = Path(args.out) if args.out else program_dir / "deliverables"
+def generate_all(program_dir: Path, inventory_path: Path | None = None,
+                 out_dir: Path | None = None, skip_pdf: bool = False) -> dict:
+    """Produce every deliverable the checkpoints allow.
+
+    Returns {"out_dir", "produced", "withheld"} so both the CLI and the GUI
+    can drive it.
+    """
+    program_dir = Path(program_dir)
+    out_dir = Path(out_dir) if out_dir else program_dir / "deliverables"
     out_dir.mkdir(parents=True, exist_ok=True)
     prog = ProgramData.load(program_dir)
-    inv = Inventory.load(args.inventory or _default_inventory(program_dir))
+    inv = Inventory.load(inventory_path or _default_inventory(program_dir))
     cps = Checkpoints.load(program_dir)
 
     findings, additions, groups = rules.run_all(prog, inv)
@@ -87,7 +93,7 @@ def cmd_generate(args):
     if not cps.is_confirmed("VALIDATE_FIRST_BOARD"):
         draft = ("DRAFT — overlay not released: build and measure one harness "
                  "on the first board before release (VALIDATE_FIRST_BOARD)")
-    formboard.write_all(prog, out_dir / "formboards", pdf=not args.skip_pdf,
+    formboard.write_all(prog, out_dir / "formboards", pdf=not skip_pdf,
                         draft_note=draft)
 
     produced = ["architecture.md", "findings.md", "bom.csv/md",
@@ -109,7 +115,7 @@ def cmd_generate(args):
         spreadsheet.build_workbook(prog, cm, times, out_dir / "costing.xlsx")
         summary = report.management_summary(prog, cm, times, findings, mvb, mg)
         (out_dir / "management_summary.md").write_text(summary)
-        if not args.skip_pdf:
+        if not skip_pdf:
             report.write_pdf(summary, out_dir / "management_summary.pdf")
         produced += ["production_plan.md", "costing.md", "costing.xlsx",
                      "management_summary.md/pdf"]
@@ -130,11 +136,33 @@ def cmd_generate(args):
     except CheckpointPending as e:
         withheld.append(f"procurement outputs — {e}")
 
-    print(f"Deliverables in {out_dir}:")
-    for p in produced:
+    return {"out_dir": str(out_dir), "produced": produced, "withheld": withheld}
+
+
+def cmd_generate(args):
+    program_dir = Path(args.program_dir)
+    result = generate_all(
+        program_dir,
+        inventory_path=Path(args.inventory) if args.inventory else None,
+        out_dir=Path(args.out) if args.out else None,
+        skip_pdf=args.skip_pdf)
+    print(f"Deliverables in {result['out_dir']}:")
+    for p in result["produced"]:
         print(f"  + {p}")
-    for wmsg in withheld:
+    for wmsg in result["withheld"]:
         print(f"  WITHHELD: {wmsg}")
+    return 0
+
+
+def cmd_gui(args):
+    from . import gui
+    roots = args.roots or []
+    if not roots:
+        here = Path.cwd()
+        pkg_fixtures = Path(__file__).resolve().parent.parent / "data" / "fixtures"
+        roots = [str(p) for p in (here, pkg_fixtures) if p.exists()]
+    gui.main(roots, args.inventory, args.port,
+             open_browser=not args.no_browser)
     return 0
 
 
@@ -182,6 +210,15 @@ def main(argv=None):
     p.add_argument("--out", default=None)
     p.add_argument("--skip-pdf", action="store_true")
     p.set_defaults(func=cmd_generate)
+
+    p = sub.add_parser("gui", help="clickable Windows XP-style interface")
+    p.add_argument("roots", nargs="*", default=None,
+                   help="directories to scan for programs (default: "
+                        "data/fixtures and the current directory)")
+    p.add_argument("--inventory", default=None)
+    p.add_argument("--port", type=int, default=8321)
+    p.add_argument("--no-browser", action="store_true")
+    p.set_defaults(func=cmd_gui)
 
     p = sub.add_parser("update-cycles")
     p.add_argument("program_dir")

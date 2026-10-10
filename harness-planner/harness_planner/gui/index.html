@@ -1,0 +1,842 @@
+<title>Harness Planner XP</title>
+<style>
+/* Layout: one Luna-style application window on an XP desktop; folders tree
+   left, viewer right. Single-theme by choice: Windows XP Luna is the visual
+   world, every color explicit. */
+:root{
+  --desktop:#3A6EA5;
+  --chrome:#ECE9D8;
+  --chrome-dk:#D4D0C8;
+  --frame:#0855DD;
+  --frame-deep:#0831D9;
+  --title-a:#0A57E3; --title-b:#4A90F4; --title-c:#1565E8;
+  --menu-hi:#316AC5;
+  --paper:#FFFFFF;
+  --ink:#1A1A1A;
+  --ink-soft:#4A4A42;
+  --sel:#316AC5;
+  --ok:#2C7A2C; --warn:#B86800; --bad:#C22A20;
+}
+html,body{height:100%}
+body{
+  margin:0;background:var(--desktop);
+  background:linear-gradient(160deg,#4E87C9 0%,#3A6EA5 45%,#2C567F 100%);
+  color:var(--ink);
+  font:11px Tahoma,"Segoe UI",Verdana,sans-serif;
+  padding:14px 16px;box-sizing:border-box;
+  padding-block:calc(14px + env(safe-area-inset-top,0px)) calc(14px + env(safe-area-inset-bottom,0px));
+  overflow:hidden;
+}
+*{box-sizing:border-box}
+#win{
+  display:flex;flex-direction:column;height:100%;
+  border:1px solid var(--frame-deep);
+  border-radius:8px 8px 3px 3px;
+  box-shadow:0 8px 30px rgba(0,20,60,.45);
+  background:var(--chrome);
+  overflow:hidden;min-width:0;
+}
+#win.maxi{border-radius:0}
+body:has(#win.maxi){padding:0;
+  padding-block:env(safe-area-inset-top,0px) env(safe-area-inset-bottom,0px)}
+
+/* ---- title bar ------------------------------------------------------- */
+#titlebar{
+  flex:0 0 auto;display:flex;align-items:center;gap:6px;
+  padding:4px 5px 4px 8px;user-select:none;
+  background:linear-gradient(180deg,#2B74E8 0%,var(--title-b) 8%,#2165DF 18%,var(--title-a) 38%,#0A54D8 72%,#0D5CE4 86%,#0845B4 100%);
+  color:#fff;text-shadow:1px 1px 1px #0E3F9E;
+  font-weight:bold;font-size:12px;
+}
+#titlebar .ico{width:16px;height:16px;flex:0 0 auto}
+#titlebar .t{flex:1 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.caption-btns{display:flex;gap:2px}
+.cbtn{
+  width:21px;height:21px;border-radius:3px;border:1px solid #fff;
+  color:#fff;font:bold 11px Tahoma,sans-serif;line-height:1;
+  display:flex;align-items:center;justify-content:center;cursor:pointer;
+  background:linear-gradient(180deg,#7DA7EE 0%,#3B77E0 45%,#2B63CC 100%);
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.25);
+}
+.cbtn:hover{filter:brightness(1.15)}
+.cbtn.close{background:linear-gradient(180deg,#F2A38C 0%,#E2573A 40%,#C33B1F 100%)}
+
+/* ---- menu + toolbar --------------------------------------------------- */
+#menubar{flex:0 0 auto;display:flex;background:var(--chrome);
+  border-bottom:1px solid #fff;padding:1px 2px;user-select:none}
+.menu{position:relative}
+.menu>button{border:1px solid transparent;background:none;font:inherit;
+  padding:3px 8px;cursor:default;color:var(--ink)}
+.menu.open>button,.menu>button:hover{background:var(--menu-hi);color:#fff}
+.dropdown{position:absolute;left:0;top:100%;z-index:60;min-width:230px;
+  background:var(--paper);border:1px solid #999;
+  box-shadow:3px 3px 4px rgba(0,0,0,.3);padding:2px;display:none}
+.menu.open .dropdown{display:block}
+.mi{display:flex;gap:8px;align-items:center;padding:4px 18px 4px 26px;
+  cursor:default;white-space:nowrap;color:var(--ink)}
+.mi:hover{background:var(--menu-hi);color:#fff}
+.mi.dis{color:#9a968c}
+.mi.dis:hover{background:none;color:#9a968c}
+.msep{height:1px;background:#d9d6c8;margin:3px 2px}
+
+#toolbar{flex:0 0 auto;display:flex;align-items:center;gap:6px;flex-wrap:wrap;
+  padding:4px 6px;background:var(--chrome);
+  border-top:1px solid #fff;border-bottom:1px solid #aca899}
+.tsep{width:1px;align-self:stretch;background:#aca899;border-right:1px solid #fff;margin:2px 2px}
+.xbtn{
+  display:inline-flex;align-items:center;gap:5px;
+  font:inherit;color:var(--ink);cursor:pointer;
+  padding:3px 10px;border:1px solid #003C74;border-radius:3px;
+  background:linear-gradient(180deg,#FFFFFF 0%,#ECEBE5 60%,#D8D0C4 100%);
+  box-shadow:inset 0 0 0 1px #fff;
+}
+.xbtn:hover{box-shadow:inset 0 0 0 1px #FFF4CF,inset 0 -2px 4px #E5A245}
+.xbtn:active{background:linear-gradient(180deg,#D8D0C4,#ECEBE5)}
+.xbtn:disabled{color:#9a968c;border-color:#9a968c;box-shadow:none;cursor:default}
+.xbtn .bico{width:14px;height:14px}
+select.xsel{font:inherit;padding:2px;border:1px solid #7F9DB9;background:#fff;color:var(--ink);max-width:220px}
+label.tl{color:var(--ink-soft)}
+
+/* ---- main area -------------------------------------------------------- */
+#main{flex:1 1 auto;display:flex;min-height:0;background:var(--chrome);padding:0 3px 3px}
+#sidebar{
+  flex:0 0 240px;display:flex;flex-direction:column;min-height:0;
+  margin-right:3px;border:1px solid #808080;background:var(--paper);
+}
+#sidebar .paneltitle{
+  flex:0 0 auto;padding:3px 8px;font-weight:bold;color:#fff;
+  background:linear-gradient(90deg,#1C5BC3,#5F9BE8);
+}
+#tree{flex:1 1 auto;overflow:auto;padding:4px 2px}
+.titem{display:flex;align-items:center;gap:5px;padding:2px 6px;white-space:nowrap;cursor:default;color:var(--ink)}
+.titem:hover{text-decoration:underline;color:var(--sel)}
+.titem.sel{background:var(--sel);color:#fff}
+.titem .fico{flex:0 0 auto}
+.tgroup{margin:6px 4px 1px;font-weight:bold;color:#1C5BC3;display:flex;gap:5px;align-items:center;cursor:default}
+.tgroup .box{width:11px;height:11px;border:1px solid #7F9DB9;background:#fff;
+  font:9px/9px Tahoma;display:inline-flex;align-items:center;justify-content:center;color:#1C5BC3}
+.tcount{color:#9a968c;font-weight:normal}
+
+#contentcol{flex:1 1 auto;display:flex;flex-direction:column;min-width:0}
+#addressbar{flex:0 0 auto;display:flex;gap:6px;align-items:center;
+  padding:3px 6px;background:var(--chrome);border-bottom:1px solid #aca899}
+#addressbar .ad{flex:1 1 auto;display:flex;gap:6px;align-items:center;
+  background:#fff;border:1px solid #7F9DB9;padding:2px 6px;min-width:0;color:var(--ink)}
+#addressbar .ad span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#viewer{flex:1 1 auto;overflow:auto;background:var(--paper);
+  border:1px solid #808080;border-top:none;padding:0;min-width:0}
+
+/* ---- status bar ------------------------------------------------------- */
+#statusbar{flex:0 0 auto;display:flex;gap:3px;padding:2px 3px 3px;background:var(--chrome)}
+.spanel{border:1px solid;border-color:#aca899 #fff #fff #aca899;
+  padding:2px 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink)}
+.spanel.grow{flex:1 1 auto}
+.sdot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px}
+
+/* ---- viewer content --------------------------------------------------- */
+.vtool{display:flex;gap:6px;align-items:center;flex-wrap:wrap;
+  padding:5px 8px;background:#F4F3EE;border-bottom:1px solid #d9d6c8;
+  position:sticky;top:0;z-index:5}
+.vtool .fname{font-weight:bold}
+.vtool .meta{color:var(--ink-soft)}
+.doc{padding:14px 18px;max-width:900px;font-size:12px;line-height:1.5}
+.doc h1{font-size:17px;margin:4px 0 10px;color:#0A3E8C;text-wrap:balance}
+.doc h2{font-size:14px;margin:16px 0 6px;color:#0A3E8C;border-bottom:1px solid #d9d6c8;padding-bottom:2px}
+.doc h3{font-size:12px;margin:12px 0 4px}
+.doc p{margin:6px 0}
+.doc ul{margin:4px 0;padding-left:22px}
+.doc li{margin:2px 0}
+.doc blockquote{margin:8px 0;padding:6px 10px;background:#FFFBE8;border-left:3px solid #E5A245}
+.doc code{font:11px "Lucida Console",Consolas,monospace;background:#F4F3EE;padding:0 3px}
+.doc hr{border:none;border-top:1px solid #d9d6c8}
+.tablewrap{overflow-x:auto;margin:8px 0;border:1px solid #aca899}
+table.grid{border-collapse:collapse;font-size:11px;min-width:100%}
+table.grid th{background:linear-gradient(180deg,#FDFDFB,#E5E2D5);text-align:left;
+  padding:4px 8px;border-right:1px solid #d9d6c8;border-bottom:1px solid #aca899;
+  white-space:nowrap;position:sticky;top:0}
+table.grid td{padding:3px 8px;border-right:1px solid #EDEBE0;border-bottom:1px solid #EDEBE0;
+  vertical-align:top;font-variant-numeric:tabular-nums}
+table.grid tr:nth-child(even) td{background:#F7F6F1}
+pre.plain{font:11px "Lucida Console",Consolas,monospace;padding:14px 18px;margin:0;white-space:pre-wrap}
+.svgwrap{overflow:auto;padding:12px;background:
+  repeating-conic-gradient(#f2f1ec 0% 25%, #ffffff 0% 50%) 0 0/24px 24px}
+.svgwrap svg{background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.25);max-width:none;display:block}
+.sev{display:inline-block;padding:1px 7px;border-radius:8px;color:#fff;font-weight:bold;font-size:10px}
+.sev.blocker{background:var(--bad)} .sev.warning{background:var(--warn)} .sev.info{background:#3C6EB4}
+.binmsg{padding:30px;text-align:center;color:var(--ink-soft)}
+
+/* home view */
+.home{padding:14px 18px;display:flex;flex-direction:column;gap:12px;max-width:980px}
+.hcard{border:1px solid #aca899;background:#FDFDFB}
+.hcard .hhdr{padding:4px 10px;font-weight:bold;color:#fff;
+  background:linear-gradient(90deg,#1C5BC3,#5F9BE8)}
+.hcard .hbody{padding:10px 12px}
+.kv{display:grid;grid-template-columns:max-content 1fr;gap:3px 16px}
+.kv dt{color:var(--ink-soft)} .kv dd{margin:0}
+.cps{display:flex;flex-direction:column;gap:6px}
+.cprow{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cprow .nm{font-weight:bold;min-width:220px}
+.badge{padding:1px 8px;border-radius:8px;font-weight:bold;font-size:10px;color:#fff}
+.badge.ok{background:var(--ok)} .badge.pend{background:var(--warn)}
+.counts{display:flex;gap:10px;flex-wrap:wrap}
+.cnt{border:1px solid #aca899;background:#fff;padding:8px 14px;text-align:center;min-width:90px}
+.cnt b{display:block;font-size:19px;font-variant-numeric:tabular-nums}
+.cnt.blocker b{color:var(--bad)} .cnt.warning b{color:var(--warn)} .cnt.info b{color:#3C6EB4}
+
+/* dialogs */
+#shade{position:fixed;inset:0;background:rgba(40,60,90,.25);display:none;
+  align-items:center;justify-content:center;z-index:100;padding:16px}
+#shade.show{display:flex}
+.dlg{background:var(--chrome);border:1px solid var(--frame-deep);
+  border-radius:8px 8px 3px 3px;box-shadow:0 8px 30px rgba(0,20,60,.5);
+  min-width:300px;max-width:min(480px,92vw)}
+.dlg .dtitle{padding:4px 8px;color:#fff;font-weight:bold;
+  background:linear-gradient(180deg,#2B74E8,#0A54D8);border-radius:7px 7px 0 0;
+  display:flex;justify-content:space-between;align-items:center}
+.dlg .dbody{padding:14px;display:flex;gap:12px}
+.dlg .dico{font-size:28px;line-height:1}
+.dlg .dmsg{font-size:11px;line-height:1.5;min-width:0}
+.dlg .dmsg code{background:#fff;border:1px solid #d9d6c8;padding:1px 4px;display:inline-block;margin:1px 0;font:10px "Lucida Console",monospace}
+.dlg .dbtns{display:flex;justify-content:center;gap:8px;padding:0 14px 12px}
+.dlg input[type=text]{font:inherit;border:1px solid #7F9DB9;padding:3px;width:100%;background:#fff;color:var(--ink)}
+.dlg .frm{display:flex;flex-direction:column;gap:6px;flex:1}
+.dlg label{color:var(--ink-soft)}
+
+@media (max-width:700px){
+  body{padding:6px}
+  #sidebar{position:absolute;z-index:40;top:0;bottom:0;left:0;display:none;
+    box-shadow:4px 0 12px rgba(0,0,0,.3)}
+  #main{position:relative}
+  #sidebar.open{display:flex}
+  .cprow .nm{min-width:0}
+}
+</style>
+
+<div id="win">
+  <div id="titlebar">
+    <svg class="ico" viewBox="0 0 16 16"><rect x="1" y="3" width="14" height="10" rx="1" fill="#F6D32D" stroke="#8a6d00"/><path d="M3 6h7M3 8h9M3 10h5" stroke="#8a6d00" stroke-width="1.2"/><circle cx="12.3" cy="10.3" r="2.6" fill="#4A90F4" stroke="#fff" stroke-width=".8"/></svg>
+    <span class="t">Harness Planner XP — <span id="t-prog">loading…</span></span>
+    <span class="caption-btns">
+      <span class="cbtn" id="b-min" title="Minimize">▁</span>
+      <span class="cbtn" id="b-max" title="Maximize">□</span>
+      <span class="cbtn close" id="b-close" title="Close">✕</span>
+    </span>
+  </div>
+
+  <div id="menubar">
+    <div class="menu" data-menu><button>File</button>
+      <div class="dropdown">
+        <div class="mi" data-act="focus-program">Open program…</div>
+        <div class="mi" data-act="download">Save current file…</div>
+        <div class="msep"></div>
+        <div class="mi" data-act="close">Exit</div>
+      </div></div>
+    <div class="menu" data-menu><button>Actions</button>
+      <div class="dropdown">
+        <div class="mi" data-act="check">Run checks</div>
+        <div class="mi" data-act="generate">Generate deliverables</div>
+        <div class="mi" data-act="confirm">Confirm checkpoint…</div>
+      </div></div>
+    <div class="menu" data-menu><button>View</button>
+      <div class="dropdown">
+        <div class="mi" data-act="toggle-folders">Folders pane</div>
+        <div class="mi" data-act="home">Program overview</div>
+      </div></div>
+    <div class="menu" data-menu><button>Help</button>
+      <div class="dropdown">
+        <div class="mi" data-act="howto">How to run the live app…</div>
+        <div class="mi" data-act="about">About Harness Planner XP</div>
+      </div></div>
+  </div>
+
+  <div id="toolbar">
+    <button class="xbtn" id="b-folders" title="Show or hide the folders pane">
+      <svg class="bico" viewBox="0 0 16 16"><path d="M1 4.5 1 13h14V6H8L6.4 4.5z" fill="#F6D32D" stroke="#8a6d00"/><path d="M1 4.5h4.2L6.4 6H1z" fill="#FBE87A" stroke="#8a6d00"/></svg>
+      Folders</button>
+    <span class="tsep"></span>
+    <label class="tl" for="selprog">Program:</label>
+    <select class="xsel" id="selprog"></select>
+    <span class="tsep"></span>
+    <button class="xbtn" id="b-check">
+      <svg class="bico" viewBox="0 0 16 16"><circle cx="7" cy="7" r="5" fill="none" stroke="#1C5BC3" stroke-width="2"/><path d="M10.8 10.8 14.5 14.5" stroke="#1C5BC3" stroke-width="2.4" stroke-linecap="round"/></svg>
+      Run checks</button>
+    <button class="xbtn" id="b-generate">
+      <svg class="bico" viewBox="0 0 16 16"><path d="M8 1.6a1.4 1.4 0 0 1 1.4 1.1l.2 1a4.8 4.8 0 0 1 1.5.9l1-.4a1.4 1.4 0 0 1 1.7.6l.4.8a1.4 1.4 0 0 1-.3 1.7l-.8.7a4.9 4.9 0 0 1 0 1.8l.8.7a1.4 1.4 0 0 1 .3 1.7l-.4.8a1.4 1.4 0 0 1-1.7.6l-1-.4a4.8 4.8 0 0 1-1.5.9l-.2 1A1.4 1.4 0 0 1 8 14.4a1.4 1.4 0 0 1-1.4-1.1l-.2-1a4.8 4.8 0 0 1-1.5-.9l-1 .4a1.4 1.4 0 0 1-1.7-.6l-.4-.8a1.4 1.4 0 0 1 .3-1.7l.8-.7a4.9 4.9 0 0 1 0-1.8l-.8-.7a1.4 1.4 0 0 1-.3-1.7l.4-.8a1.4 1.4 0 0 1 1.7-.6l1 .4a4.8 4.8 0 0 1 1.5-.9l.2-1A1.4 1.4 0 0 1 8 1.6z" fill="#7a9bd0" stroke="#2b4f8c"/><circle cx="8" cy="8" r="2.1" fill="#fff" stroke="#2b4f8c"/></svg>
+      Generate deliverables</button>
+    <button class="xbtn" id="b-confirm">
+      <svg class="bico" viewBox="0 0 16 16"><path d="M2.5 8.5 6.5 12.5 13.5 3.5" fill="none" stroke="#2C7A2C" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      Confirm checkpoint…</button>
+  </div>
+
+  <div id="main">
+    <div id="sidebar">
+      <div class="paneltitle">Folders</div>
+      <div id="tree"></div>
+    </div>
+    <div id="contentcol">
+      <div id="addressbar">
+        <span class="tl">Address</span>
+        <span class="ad"><svg width="14" height="14" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" rx="2" fill="#4A90F4"/><path d="M5 8h6M8 5v6" stroke="#fff" stroke-width="1.6"/></svg><span id="addr">…</span></span>
+      </div>
+      <div id="viewer"></div>
+    </div>
+  </div>
+
+  <div id="statusbar">
+    <span class="spanel" id="st-mode">starting…</span>
+    <span class="spanel" id="st-findings">checks not run</span>
+    <span class="spanel grow" id="st-file"></span>
+  </div>
+</div>
+
+<div id="shade">
+  <div class="dlg" role="dialog" aria-modal="true">
+    <div class="dtitle"><span id="dlg-title">Harness Planner</span>
+      <span class="cbtn close" id="dlg-x" style="width:18px;height:18px">✕</span></div>
+    <div class="dbody">
+      <div class="dico" id="dlg-ico">ℹ️</div>
+      <div class="dmsg" id="dlg-msg"></div>
+    </div>
+    <div class="dbtns" id="dlg-btns"></div>
+  </div>
+</div>
+
+<script id="demo-data">window.DEMO_DATA = /*__DEMO_DATA__*/null;</script>
+<script>
+"use strict";
+/* ======================================================================= */
+/* backends: Live talks to the local server; Demo reads data packed into   */
+/* this file by tools/build_demo.py.                                       */
+
+async function api(path, opts) {
+  const r = await fetch(path, opts);
+  const j = await r.json();
+  if (!r.ok) throw new Error(j.error || r.statusText);
+  return j;
+}
+
+const Live = {
+  name: "live",
+  canAct: true,
+  programs: () => api("/api/programs"),
+  files: (p) => api(`/api/files?program=${encodeURIComponent(p)}`),
+  async fileText(p, path) {
+    const r = await fetch(this.fileURL(p, path));
+    if (!r.ok) throw new Error("could not read " + path);
+    return r.text();
+  },
+  fileURL: (p, path, dl) =>
+    `/api/file?program=${encodeURIComponent(p)}&path=${encodeURIComponent(path)}` +
+    (dl ? "&download=1" : ""),
+  check: (p) => api("/api/check", {method: "POST",
+    body: JSON.stringify({program: p})}),
+  generate: (p) => api("/api/generate", {method: "POST",
+    body: JSON.stringify({program: p})}),
+  confirm: (p, checkpoint, by, notes) => api("/api/confirm", {method: "POST",
+    body: JSON.stringify({program: p, checkpoint, by, notes})}),
+};
+
+const Demo = {
+  name: "demo",
+  canAct: false,
+  _prog(p) { return window.DEMO_DATA.programs.find(x => x.id === p); },
+  programs: async () => window.DEMO_DATA.programs,
+  files: async function (p) { return this._prog(p).files.map(f => ({
+    path: f.path, name: f.name, group: f.group, ext: f.ext, size_kb: f.size_kb})); },
+  fileText: async function (p, path) {
+    const f = this._prog(p).files.find(x => x.path === path);
+    if (!f || f.content == null) throw new Error("not packed into the demo");
+    return f.content;
+  },
+  fileB64: function (p, path) {
+    const f = this._prog(p).files.find(x => x.path === path);
+    return f && f.b64 ? f.b64 : null;
+  },
+  check: async function (p) { return this._prog(p).check; },
+};
+
+/* ======================================================================= */
+const S = {backend: null, programs: [], progId: null, files: [],
+           view: null, lastCheck: {}};
+const $ = (id) => document.getElementById(id);
+
+function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+/* ---- tiny markdown renderer (headings, tables, lists, bold, code) ----- */
+function mdInline(s) {
+  s = esc(s);
+  s = s.replace(/\*\*([^*]+)\*\*/g, "<b>$1</b>");
+  s = s.replace(/(^|[^*])\*([^*\s][^*]*)\*/g, "$1<i>$2</i>");
+  s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+  return s;
+}
+function mdRender(md) {
+  const lines = md.split(/\r?\n/);
+  let out = [], i = 0, list = false;
+  const closeList = () => { if (list) { out.push("</ul>"); list = false; } };
+  while (i < lines.length) {
+    const ln = lines[i];
+    if (/^\s*\|/.test(ln)) {               // table block
+      closeList();
+      const rows = [];
+      while (i < lines.length && /^\s*\|/.test(lines[i])) rows.push(lines[i++]);
+      out.push('<div class="tablewrap"><table class="grid">');
+      rows.forEach((r, ri) => {
+        if (/^\s*\|[\s:|-]+\|\s*$/.test(r)) return;     // separator row
+        const cells = r.trim().replace(/^\||\|$/g, "").split("|");
+        const tag = ri === 0 ? "th" : "td";
+        out.push("<tr>" + cells.map(c =>
+          `<${tag}>${mdInline(c.trim())}</${tag}>`).join("") + "</tr>");
+      });
+      out.push("</table></div>");
+      continue;
+    }
+    if (/^#{1,3} /.test(ln)) { closeList();
+      const level = ln.match(/^#+/)[0].length;
+      out.push(`<h${level}>${mdInline(ln.replace(/^#+ /, ""))}</h${level}>`);
+    } else if (/^\s*[-*] /.test(ln)) {
+      if (!list) { out.push("<ul>"); list = true; }
+      out.push("<li>" + mdInline(ln.replace(/^\s*[-*] /, "")) + "</li>");
+    } else if (/^> /.test(ln)) { closeList();
+      out.push("<blockquote>" + mdInline(ln.slice(2)) + "</blockquote>");
+    } else if (/^---+\s*$/.test(ln)) { closeList(); out.push("<hr>");
+    } else if (ln.trim() === "") { closeList();
+    } else { closeList(); out.push("<p>" + mdInline(ln) + "</p>"); }
+    i++;
+  }
+  closeList();
+  return '<div class="doc">' + out.join("\n") + "</div>";
+}
+
+/* ---- CSV ---------------------------------------------------------------*/
+function parseCSV(text) {
+  const rows = []; let row = [], cell = "", q = false;
+  for (let i = 0; i < text.length; i++) {
+    const c = text[i];
+    if (q) {
+      if (c === '"') { if (text[i + 1] === '"') { cell += '"'; i++; }
+        else q = false; }
+      else cell += c;
+    } else if (c === '"') q = true;
+    else if (c === ",") { row.push(cell); cell = ""; }
+    else if (c === "\n") { row.push(cell); rows.push(row); row = []; cell = ""; }
+    else if (c !== "\r") cell += c;
+  }
+  if (cell !== "" || row.length) { row.push(cell); rows.push(row); }
+  return rows.filter(r => r.length > 1 || (r[0] || "").trim() !== "");
+}
+function csvRender(text) {
+  const rows = parseCSV(text);
+  if (!rows.length) return '<div class="doc"><p>(empty)</p></div>';
+  let h = '<div class="doc" style="max-width:none"><div class="tablewrap"><table class="grid">';
+  rows.forEach((r, ri) => {
+    const tag = ri === 0 ? "th" : "td";
+    h += "<tr>" + r.map(c => `<${tag}>${esc(c)}</${tag}>`).join("") + "</tr>";
+  });
+  return h + "</table></div></div>";
+}
+
+/* ---- file icons --------------------------------------------------------*/
+const ICONS = {
+  md:  '<svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 1h7l3 3v11H3z" fill="#fff" stroke="#6b84a8"/><path d="M10 1v3h3" fill="none" stroke="#6b84a8"/><path d="M5 7h6M5 9h6M5 11h4" stroke="#4A90F4"/></svg>',
+  csv: '<svg width="15" height="15" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#fff" stroke="#3d7a3d"/><path d="M2 6h12M2 10h12M7 2v12" stroke="#3d7a3d"/></svg>',
+  svg: '<svg width="15" height="15" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#fff" stroke="#8a5fb8"/><path d="M3 11c3-6 7 2 10-4" fill="none" stroke="#8a5fb8" stroke-width="1.4"/><circle cx="5" cy="5.5" r="1.3" fill="#8a5fb8"/></svg>',
+  txt: '<svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 1h7l3 3v11H3z" fill="#fff" stroke="#8d8d8d"/><path d="M5 7h6M5 9h6M5 11h5" stroke="#8d8d8d"/></svg>',
+  xlsx:'<svg width="15" height="15" viewBox="0 0 16 16"><rect x="2" y="2" width="12" height="12" fill="#1e7145"/><path d="M5 5l6 6M11 5l-6 6" stroke="#fff" stroke-width="1.6"/></svg>',
+  pdf: '<svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 1h7l3 3v11H3z" fill="#fff" stroke="#c0392b"/><text x="4" y="12" font-size="6" font-weight="bold" fill="#c0392b" font-family="Tahoma">PDF</text></svg>',
+  home:'<svg width="15" height="15" viewBox="0 0 16 16"><rect x="2" y="3" width="12" height="10" rx="1" fill="#F6D32D" stroke="#8a6d00"/><circle cx="11.6" cy="10.6" r="2.7" fill="#4A90F4" stroke="#fff" stroke-width=".8"/></svg>',
+  find:'<svg width="15" height="15" viewBox="0 0 16 16"><circle cx="7" cy="7" r="4.4" fill="none" stroke="#1C5BC3" stroke-width="1.8"/><path d="M10.4 10.4 14 14" stroke="#1C5BC3" stroke-width="2.2" stroke-linecap="round"/></svg>',
+  json:'<svg width="15" height="15" viewBox="0 0 16 16"><path d="M3 1h7l3 3v11H3z" fill="#fff" stroke="#8d8d8d"/><text x="4" y="12" font-size="6.4" font-weight="bold" fill="#8d8d8d" font-family="Tahoma">{ }</text></svg>',
+};
+const icon = (ext) => ICONS[ext] || ICONS.txt;
+
+/* ---- dialogs -----------------------------------------------------------*/
+function dialog(title, html, buttons, ico) {
+  $("dlg-title").textContent = title;
+  $("dlg-msg").innerHTML = html;
+  $("dlg-ico").textContent = ico || "ℹ️";
+  const bb = $("dlg-btns"); bb.innerHTML = "";
+  (buttons || [{label: "OK"}]).forEach(b => {
+    const el = document.createElement("button");
+    el.className = "xbtn"; el.style.minWidth = "72px";
+    el.textContent = b.label;
+    el.onclick = () => { closeDialog(); if (b.onclick) b.onclick(); };
+    bb.appendChild(el);
+  });
+  $("shade").classList.add("show");
+  bb.querySelector("button").focus();
+}
+function closeDialog() { $("shade").classList.remove("show"); }
+$("dlg-x").onclick = closeDialog;
+$("shade").addEventListener("click", e => {
+  if (e.target === $("shade")) closeDialog(); });
+
+const HOWTO_HTML = `
+This page is the read-only tour. The live application runs the real engine
+(checks, checkpoint confirmations, fresh deliverables) on your computer:<br><br>
+1. Get the repository (green <b>Code</b> button → Download ZIP) and unpack it.<br>
+2. Install Python 3.11+ from python.org (tick "Add to PATH").<br>
+3. Double-click <code>Start Harness Planner.bat</code> (Windows) or
+<code>start-harness-planner.command</code> (Mac) inside the
+<code>harness-planner</code> folder.<br><br>
+The same window opens in your browser, with every button live.`;
+
+/* ---- init --------------------------------------------------------------*/
+async function init() {
+  try {
+    S.programs = await Live.programs();
+    S.backend = Live;
+  } catch (e) {
+    if (window.DEMO_DATA) {
+      S.backend = Demo;
+      S.programs = await Demo.programs();
+    } else {
+      $("st-mode").textContent = "no data";
+      dialog("Harness Planner", "Could not reach the local server and no " +
+        "demo data is packed into this file.<br><br>" + HOWTO_HTML, null, "⚠️");
+      return;
+    }
+  }
+  $("st-mode").innerHTML = S.backend === Live
+    ? '<span class="sdot" style="background:var(--ok)"></span>Live — engine connected'
+    : '<span class="sdot" style="background:var(--warn)"></span>Demo — example data packed in';
+  const sel = $("selprog");
+  sel.innerHTML = S.programs.map(p =>
+    `<option value="${esc(p.id)}">${esc(p.name || p.id)}</option>`).join("");
+  sel.onchange = () => openProgram(sel.value);
+  if (S.programs.length) openProgram(S.programs[0].id);
+  if (S.backend === Demo) {
+    ["b-generate", "b-confirm"].forEach(id => $(id).disabled = true);
+  }
+}
+
+function prog() { return S.programs.find(p => p.id === S.progId); }
+
+async function openProgram(id) {
+  S.progId = id;
+  $("selprog").value = id;
+  $("t-prog").textContent = (prog().name || id);
+  try { S.files = await S.backend.files(id); }
+  catch (e) { S.files = []; }
+  renderTree();
+  showHome();
+}
+
+/* ---- folders tree ------------------------------------------------------*/
+const GROUP_ORDER = ["Reports", "Interpretation", "BOM & parts", "Tooling",
+  "Production plan", "Procurement", "Formboards", "Work files", "Other"];
+const collapsed = {};
+
+function renderTree() {
+  const t = $("tree");
+  let h = `<div class="titem" data-view="home">${ICONS.home}<span>Program overview</span></div>`;
+  if (S.lastCheck[S.progId]) {
+    h += `<div class="titem" data-view="findings">${ICONS.find}<span>Check results</span></div>`;
+  }
+  const groups = {};
+  S.files.forEach(f => (groups[f.group] = groups[f.group] || []).push(f));
+  GROUP_ORDER.forEach(g => {
+    if (!groups[g]) return;
+    const open = !collapsed[g];
+    h += `<div class="tgroup" data-group="${esc(g)}"><span class="box">${open ? "−" : "+"}</span>${esc(g)} <span class="tcount">(${groups[g].length})</span></div>`;
+    if (open) groups[g].forEach(f => {
+      h += `<div class="titem" data-path="${esc(f.path)}" title="${esc(f.name)} — ${f.size_kb} KB">${icon(f.ext)}<span>${esc(f.name)}</span></div>`;
+    });
+  });
+  if (!S.files.length) {
+    h += `<div style="padding:10px;color:#9a968c">No deliverables yet.<br>Use <b>Generate deliverables</b>.</div>`;
+  }
+  t.innerHTML = h;
+  t.querySelectorAll(".titem").forEach(el => el.onclick = () => {
+    t.querySelectorAll(".titem.sel").forEach(x => x.classList.remove("sel"));
+    el.classList.add("sel");
+    if (el.dataset.view === "home") showHome();
+    else if (el.dataset.view === "findings") showFindings();
+    else openFile(el.dataset.path);
+    if (innerWidth <= 700) $("sidebar").classList.remove("open");
+  });
+  t.querySelectorAll(".tgroup").forEach(el => el.onclick = () => {
+    collapsed[el.dataset.group] = !collapsed[el.dataset.group];
+    renderTree();
+  });
+}
+
+function setAddr(leaf) {
+  const p = prog();
+  $("addr").textContent =
+    `C:\\Program Files\\Harness Planner\\${(p && (p.name || p.id)) || ""}` +
+    (leaf ? "\\" + leaf.replaceAll("/", "\\") : "");
+}
+
+/* ---- views -------------------------------------------------------------*/
+function showHome() {
+  const p = prog(); if (!p) return;
+  setAddr("");
+  $("st-file").textContent = "";
+  const cps = p.checkpoints || {};
+  const cpRow = (name) => {
+    const c = cps[name] || {};
+    const ok = c.status === "confirmed";
+    return `<div class="cprow"><span class="nm">${esc(name)}</span>
+      <span class="badge ${ok ? "ok" : "pend"}">${ok ? "CONFIRMED" : "PENDING"}</span>
+      <span style="color:var(--ink-soft)">${ok ? esc((c.by || "") + (c.date ? " · " + c.date.slice(0, 10) : "")) : esc(c.notes || "waiting for the owner")}</span>
+      ${S.backend.canAct && !ok ? `<button class="xbtn" data-cp="${esc(name)}">Confirm…</button>` : ""}
+      </div>`;
+  };
+  const chk = S.lastCheck[S.progId];
+  const sevCount = (sev) => chk ? chk.findings.filter(f => f.severity === sev).length : "–";
+  $("viewer").innerHTML = `
+  <div class="home">
+    <div class="hcard"><div class="hhdr">Program</div><div class="hbody">
+      <dl class="kv">
+        <dt>Program</dt><dd><b>${esc(p.name || p.id)}</b> rev ${esc(p.revision || "–")} · ${esc(p.date || "")}</dd>
+        <dt>Customer</dt><dd>${esc(p.customer || "–")}</dd>
+        <dt>Volumes</dt><dd>${esc((p.volumes || []).join(", "))} <b>${esc(p.volume_unit || "")}</b> planned · with upper limits: ${esc((p.planned_volumes || []).join(", "))}</dd>
+        <dt>Harnesses</dt><dd>${(p.harnesses || []).map(h =>
+          `${esc(h.drawing)} ${esc(h.name)} (×${h.qty_per_set}/set)`).join("<br>")}</dd>
+      </dl>
+    </div></div>
+    <div class="hcard"><div class="hhdr">Findings ${chk ? "" : "— run checks to fill in"}</div><div class="hbody counts">
+      <div class="cnt blocker"><b>${sevCount("blocker")}</b>blockers</div>
+      <div class="cnt warning"><b>${sevCount("warning")}</b>warnings</div>
+      <div class="cnt info"><b>${sevCount("info")}</b>info</div>
+      <div class="cnt"><b>${chk ? chk.additions.length : "–"}</b>parts added by spec</div>
+    </div></div>
+    <div class="hcard"><div class="hhdr">Checkpoints — gates before costing, ordering and board release</div>
+      <div class="hbody cps">
+        ${["CONFIRM_ARCHITECTURE", "CONFIRM_VOLUME_UNITS", "RESOLVE_BLOCKERS", "VALIDATE_FIRST_BOARD"].map(cpRow).join("")}
+      </div></div>
+  </div>`;
+  $("viewer").querySelectorAll("[data-cp]").forEach(b =>
+    b.onclick = () => confirmDialog(b.dataset.cp));
+}
+
+function showFindings() {
+  const chk = S.lastCheck[S.progId]; if (!chk) return;
+  setAddr("check results");
+  const order = {blocker: 0, warning: 1, info: 2};
+  const rows = [...chk.findings].sort((a, b) =>
+    (order[a.severity] - order[b.severity]) || a.id.localeCompare(b.id));
+  let h = `<div class="vtool"><span class="fname">Check results</span>
+    <span class="meta">${rows.length} findings · ${chk.additions.length} spec-cascaded parts${S.backend === Demo ? " · pre-computed for the demo" : ""}</span></div>
+    <div class="doc" style="max-width:none"><div class="tablewrap"><table class="grid">
+    <tr><th>ID</th><th>Severity</th><th>Harness</th><th>Finding</th><th>Source</th><th>Proposed default</th></tr>`;
+  rows.forEach(f => {
+    h += `<tr><td>${esc(f.id)}</td><td><span class="sev ${esc(f.severity)}">${esc(f.severity.toUpperCase())}</span></td>
+      <td>${esc(f.harness || "—")}</td><td>${esc(f.message)}</td>
+      <td>${esc(f.source || "")}</td><td>${esc(f.proposed_default || "—")}</td></tr>`;
+  });
+  h += `</table></div><h2>Parts the specs require that the drawing/BOM omitted</h2>
+    <div class="tablewrap"><table class="grid">
+    <tr><th>Harness</th><th>Part</th><th>Qty/harness</th><th>Required by</th><th>Rule</th><th>Source</th><th>Status</th></tr>`;
+  chk.additions.forEach(a => {
+    h += `<tr><td>${esc(a.harness)}</td><td>${esc(a.mpn)}</td><td>${a.qty_per_harness}</td>
+      <td>${esc(a.required_by)}</td><td>${esc(a.when)}</td><td>${esc(a.source)}</td><td>${esc(a.note)}</td></tr>`;
+  });
+  h += "</table></div></div>";
+  $("viewer").innerHTML = h;
+}
+
+const canDownload = () => S.backend === Live || location.protocol === "file:";
+
+async function openFile(path) {
+  const f = S.files.find(x => x.path === path); if (!f) return;
+  setAddr(f.name);
+  $("st-file").textContent = `${f.name} — ${f.size_kb} KB`;
+  const v = $("viewer");
+  let tool = `<div class="vtool"><span class="fname">${icon(f.ext)} ${esc(f.name)}</span>
+    <span class="meta">${f.size_kb} KB</span>`;
+  if (canDownload()) tool += `<button class="xbtn" id="v-dl">Save a copy…</button>`;
+  const isSvg = f.ext === "svg";
+  if (isSvg) tool += `<span class="tsep"></span>
+    <button class="xbtn" data-z="out">−</button>
+    <button class="xbtn" data-z="fit">Fit width</button>
+    <button class="xbtn" data-z="in">+</button>
+    <button class="xbtn" data-z="100">1:1 (true scale ≈ screen dependent)</button>`;
+  tool += "</div>";
+
+  if (["xlsx", "pdf", "png"].includes(f.ext)) {
+    v.innerHTML = tool + `<div class="binmsg">${icon(f.ext)}<br><br>
+      <b>${esc(f.name)}</b> is a binary file (${f.ext.toUpperCase()}).<br>
+      ${canDownload() ? "Use <b>Save a copy…</b> to open it in its own program."
+        : "Open the live app on your computer to save it (Help → How to run the live app)."}</div>`;
+    hookDownload(f);
+    return;
+  }
+  let text;
+  try { text = await S.backend.fileText(S.progId, path); }
+  catch (e) {
+    v.innerHTML = tool + `<div class="binmsg">This file is not packed into the
+      demo. Run the live app to open it.</div>`;
+    return;
+  }
+  if (f.ext === "md") v.innerHTML = tool + mdRender(text);
+  else if (f.ext === "csv") v.innerHTML = tool + csvRender(text);
+  else if (isSvg) {
+    v.innerHTML = tool + `<div class="svgwrap" id="svgwrap">${text.replace(/^[\s\S]*?<svg/, "<svg")}</div>`;
+    initSvgZoom();
+  } else v.innerHTML = tool + `<pre class="plain">${esc(text)}</pre>`;
+  hookDownload(f, text);
+}
+
+function hookDownload(f, text) {
+  const b = $("v-dl"); if (!b) return;
+  b.onclick = () => {
+    if (S.backend === Live) {
+      location.href = Live.fileURL(S.progId, f.path, true);
+      return;
+    }
+    let blob;
+    if (text != null) blob = new Blob([text], {type: "text/plain"});
+    else {
+      const b64 = Demo.fileB64(S.progId, f.path);
+      if (!b64) { dialog("Save a copy", "This file is not packed into the demo.", null, "⚠️"); return; }
+      const bin = atob(b64), arr = new Uint8Array(bin.length);
+      for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+      blob = new Blob([arr]);
+    }
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = f.name.split("/").pop();
+    a.click();
+    setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+  };
+}
+
+function initSvgZoom() {
+  const wrap = $("svgwrap"); if (!wrap) return;
+  const svg = wrap.querySelector("svg"); if (!svg) return;
+  const vb = (svg.getAttribute("viewBox") || "0 0 2400 1200").split(/\s+/);
+  const natW = parseFloat(vb[2]) || 2400;
+  let scale;
+  const apply = () => { svg.style.width = (natW * scale) + "px"; svg.style.height = "auto"; };
+  const fit = () => { scale = (wrap.clientWidth - 30) / natW; apply(); };
+  fit();
+  document.querySelectorAll("[data-z]").forEach(b => b.onclick = () => {
+    if (b.dataset.z === "in") scale *= 1.3;
+    else if (b.dataset.z === "out") scale /= 1.3;
+    else if (b.dataset.z === "100") scale = 3.7795; /* ~96dpi px per mm */
+    else { fit(); return; }
+    apply();
+  });
+}
+
+/* ---- actions -----------------------------------------------------------*/
+async function runChecks() {
+  try {
+    const res = await S.backend.check(S.progId);
+    S.lastCheck[S.progId] = res;
+    const n = (s) => res.findings.filter(f => f.severity === s).length;
+    $("st-findings").textContent =
+      `${n("blocker")} blockers · ${n("warning")} warnings · ${n("info")} info`;
+    renderTree();
+    showFindings();
+  } catch (e) { dialog("Run checks", esc(e.message), null, "⚠️"); }
+}
+
+async function runGenerate() {
+  if (!S.backend.canAct) return demoNote("Generate deliverables");
+  $("b-generate").disabled = true;
+  $("st-file").textContent = "generating… (formboards, costing, procurement)";
+  try {
+    const res = await S.backend.generate(S.progId);
+    S.files = await S.backend.files(S.progId);
+    renderTree();
+    let msg = "<b>Produced:</b><br>" + res.produced.map(esc).join("<br>");
+    if (res.withheld.length) {
+      msg += "<br><br><b>Withheld (checkpoint gates):</b><br>" +
+        res.withheld.map(esc).join("<br>");
+    }
+    dialog("Generate deliverables", msg, null, "✅");
+  } catch (e) { dialog("Generate deliverables", esc(e.message), null, "⚠️"); }
+  $("b-generate").disabled = false;
+  $("st-file").textContent = "";
+}
+
+function confirmDialog(preselect) {
+  if (!S.backend.canAct) return demoNote("Confirm checkpoint");
+  const cps = ["CONFIRM_ARCHITECTURE", "CONFIRM_VOLUME_UNITS",
+               "RESOLVE_BLOCKERS", "VALIDATE_FIRST_BOARD"];
+  dialog("Confirm checkpoint", `
+    <div class="frm">
+      <label for="cp-sel">Checkpoint</label>
+      <select class="xsel" id="cp-sel" style="max-width:none">${cps.map(c =>
+        `<option ${c === preselect ? "selected" : ""}>${c}</option>`).join("")}</select>
+      <label for="cp-by">Confirmed by (required)</label>
+      <input type="text" id="cp-by" placeholder="your name">
+      <label for="cp-notes">Notes</label>
+      <input type="text" id="cp-notes" placeholder="e.g. volumes are sets, not harnesses">
+      <div style="color:var(--ink-soft)">A checkpoint records a decision a
+      person made — it is never confirmed automatically.</div>
+    </div>`,
+    [{label: "Confirm", onclick: async () => {
+      try {
+        const cp = $("cp-sel").value, by = $("cp-by").value,
+              notes = $("cp-notes").value;
+        const cps2 = await S.backend.confirm(S.progId, cp, by, notes);
+        prog().checkpoints = cps2;
+        showHome();
+      } catch (e) { dialog("Confirm checkpoint", esc(e.message), null, "⚠️"); }
+    }}, {label: "Cancel"}], "✔️");
+}
+
+function demoNote(what) {
+  dialog(what, `This page is the <b>demo</b> — it shows real generated
+    outputs, but actions run only in the live app on your computer.<br><br>`
+    + HOWTO_HTML, null, "ℹ️");
+}
+
+/* ---- chrome wiring -----------------------------------------------------*/
+$("b-check").onclick = runChecks;
+$("b-generate").onclick = runGenerate;
+$("b-confirm").onclick = () => confirmDialog();
+$("b-folders").onclick = () => {
+  const sb = $("sidebar");
+  if (innerWidth <= 700) sb.classList.toggle("open");
+  else sb.style.display = (sb.style.display === "none" ? "" : "none");
+};
+$("b-max").onclick = () => $("win").classList.toggle("maxi");
+$("b-min").onclick = () => {
+  ["menubar", "toolbar", "main", "statusbar", "addressbar"].forEach(id => {
+    const el = $(id); if (el) el.hidden = !el.hidden; });
+};
+$("b-close").onclick = () => dialog("Harness Planner XP",
+  "It is now safe to close this browser tab.", null, "💾");
+
+document.querySelectorAll("[data-menu]").forEach(m => {
+  m.querySelector("button").onclick = (e) => {
+    e.stopPropagation();
+    const was = m.classList.contains("open");
+    document.querySelectorAll(".menu.open").forEach(x => x.classList.remove("open"));
+    if (!was) m.classList.add("open");
+  };
+});
+document.addEventListener("click", () =>
+  document.querySelectorAll(".menu.open").forEach(x => x.classList.remove("open")));
+document.querySelectorAll(".mi[data-act]").forEach(mi => {
+  mi.addEventListener("click", () => {
+    const act = mi.dataset.act;
+    if (act === "focus-program") $("selprog").focus();
+    else if (act === "download") { const b = $("v-dl"); if (b) b.click();
+      else dialog("Save current file", "Open a file first.", null, "ℹ️"); }
+    else if (act === "close") $("b-close").onclick();
+    else if (act === "check") runChecks();
+    else if (act === "generate") runGenerate();
+    else if (act === "confirm") confirmDialog();
+    else if (act === "toggle-folders") $("b-folders").onclick();
+    else if (act === "home") showHome();
+    else if (act === "howto") dialog("How to run the live app", HOWTO_HTML, null, "🛠️");
+    else if (act === "about") dialog("About Harness Planner XP",
+      `<b>Harness Planner XP</b><br>version 0.1 — the clickable face of the
+      harness-planner engine.<br><br>It reads one structured program file,
+      runs the rules engine (BOM reconciliation, compatibility, accessory
+      cascade, tooling reuse) and generates every deliverable: BOMs,
+      termination maps, tooling lists, line plans, costing workbooks,
+      procurement lists and true-scale formboards.<br><br>
+      All example data is synthetic.`, null, "🔌");
+  });
+});
+
+init();
+</script>

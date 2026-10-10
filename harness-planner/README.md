@@ -9,7 +9,25 @@ with margin, a maintenance plan, a ready-to-order procurement list, and
 to-scale formboard drawings — all generated from one structured data model,
 with every number traceable to a cited source.
 
-## Quickstart
+## Clickable interface (no terminal needed)
+
+Two ways in, both styled like a Windows XP application:
+
+- **Just looking?** Open `HarnessPlannerXP.html` in any browser (double-click
+  it). It is fully self-contained — the two example programs' deliverables,
+  findings and formboards are packed inside. No install.
+- **Working?** Double-click `Start Harness Planner.bat` (Windows) or
+  `start-harness-planner.command` (Mac/Linux). It starts the live app at
+  `http://127.0.0.1:8321` with every button wired to the real engine: run
+  checks, confirm checkpoints, generate fresh deliverables, save files.
+  Needs Python 3.11+ (python.org, tick "Add to PATH"). Equivalent CLI:
+  `python3 -m harness_planner gui`.
+
+The live app scans the directories you give it (default: `data/fixtures` and
+the current directory) for folders containing a `program.json`. Rebuild the
+standalone demo after changing examples with `python3 tools/build_demo.py`.
+
+## Quickstart (CLI)
 
 ```bash
 cd harness-planner
