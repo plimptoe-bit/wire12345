@@ -1,0 +1,2 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S1,DIAG,W-FLRY-050,300,5,6.0,0.0,306.0,reel,"A: strip 6 per [application spec: SYN-APPSPEC-DTM, Rev D, sec 2.3] | B: no termination at this end"

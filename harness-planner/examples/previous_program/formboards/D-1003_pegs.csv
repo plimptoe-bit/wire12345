@@ -1,0 +1,6 @@
+peg,x_mm_from_datum,y_mm_from_datum,kind,note
+P01,550.0,160.0,nest,"CONN-NANO-4 nest, keyed, latch up"
+P02,100.0,160.0,nest,"CONN-NANO-4 nest, keyed, latch up"
+P03,250.0,160.0,support,bundle support on S1
+P04,250.0,160.0,support,bundle support on S2
+P05,250.0,160.0,support,bundle support on S3

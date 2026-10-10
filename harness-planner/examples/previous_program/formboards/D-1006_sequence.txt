@@ -1,0 +1,9 @@
+BUILD SEQUENCE — D-1006 rev B (M12 sensor plug, 3 inserts)
+
+ 1. Load INSERT-M12 into nest at (900, 160) (keyway 12 o'clock)
+ 2. Load INSERT-M12 into nest at (900, 380) (keyway 12 o'clock)
+ 3. Load INSERT-M12 into nest at (900, 600) (keyway 12 o'clock)
+ 4. Route segment S1 (A1/A2, cut 807 mm) along its path; terminate per termination map
+ 5. Route segment S2 (B1/B2, cut 807 mm) along its path; terminate per termination map
+ 6. Route segment S3 (C1/C2, cut 807 mm) along its path; terminate per termination map
+ 7. Inspect per overlay inspection box; record on traveller; final length check against overlay

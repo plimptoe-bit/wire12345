@@ -1,0 +1,9 @@
+peg,x_mm_from_datum,y_mm_from_datum,kind,note
+P01,2100.0,160.0,nest,"CONN-MAT-HDR nest, keyed, latch up"
+P02,100.0,160.0,nest,"CONN-MAT-HDR nest, keyed, latch up"
+P03,1800.0,160.0,support,bundle support on S1
+P04,1500.0,160.0,support,bundle support on S1
+P05,1200.0,160.0,support,bundle support on S1
+P06,900.0,160.0,support,bundle support on S1
+P07,600.0,160.0,support,bundle support on S1
+P08,300.0,160.0,support,bundle support on S1

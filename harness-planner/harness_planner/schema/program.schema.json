@@ -1,0 +1,237 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Harness program",
+  "type": "object",
+  "required": ["program", "parts", "harnesses", "customer_bom"],
+  "properties": {
+    "program": {
+      "type": "object",
+      "required": ["name", "volumes_per_week"],
+      "properties": {
+        "name": {"type": "string"},
+        "customer": {"type": "string"},
+        "revision": {"type": "string"},
+        "date": {"type": "string"},
+        "volume_unit": {"type": "string", "description": "customer's unit, e.g. sets/week"},
+        "volumes_per_week": {"type": "array", "items": {"type": "number"}, "minItems": 1},
+        "upper_limit_factors": {"type": "array", "items": {"type": "number"}},
+        "horizon_weeks": {"type": "number"},
+        "selling_price_per_set": {"type": ["number", "null"]},
+        "workmanship_standard": {"type": "string"},
+        "notes": {"type": "string"},
+        "rates": {
+          "type": "object",
+          "properties": {
+            "technician_rate_per_hour": {"type": "number"},
+            "loaded_multiplier": {"type": "number"},
+            "productive_hours_per_week": {"type": "number"},
+            "weeks_per_year": {"type": "number"},
+            "depreciation_years": {"type": "number"},
+            "overhead_per_set": {"type": "number"},
+            "scrap_fraction": {"type": "number"},
+            "currency": {"type": "string"},
+            "source": {"$ref": "#/$defs/citation"}
+          }
+        }
+      }
+    },
+    "documents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id"],
+        "properties": {
+          "id": {"type": "string"},
+          "number": {"type": "string"},
+          "title": {"type": "string"},
+          "revision": {"type": "string"},
+          "rank": {"type": "integer", "minimum": 1, "maximum": 6},
+          "url": {"type": ["string", "null"]},
+          "url_verified": {"type": "boolean"},
+          "file": {"type": ["string", "null"]},
+          "notes": {"type": "string"}
+        }
+      }
+    },
+    "parts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["mpn", "category"],
+        "properties": {
+          "mpn": {"type": "string"},
+          "manufacturer": {"type": "string"},
+          "description": {"type": "string"},
+          "category": {
+            "enum": ["terminal", "housing", "seal", "lock", "accessory", "wire",
+                     "cable", "preterminated_assembly", "tape", "label",
+                     "heat_shrink", "consumable", "connector_module", "tool"]
+          },
+          "uom": {"type": "string"},
+          "package_qty": {"type": "number"},
+          "moq": {"type": "number"},
+          "price_tiers": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["min_qty", "unit_price"],
+              "properties": {
+                "min_qty": {"type": "number"},
+                "unit_price": {"type": "number"}
+              }
+            }
+          },
+          "lead_time_weeks": {"type": ["number", "null"]},
+          "distributor_links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "distributor": {"type": "string"},
+                "url": {"type": ["string", "null"]},
+                "url_verified": {"type": "boolean"},
+                "stock": {"type": ["number", "null"]},
+                "eol_note": {"type": "string"}
+              }
+            }
+          },
+          "governing_docs": {"type": "array", "items": {"type": "string"}},
+          "consigned": {"type": "boolean"},
+          "attrs": {"type": "object"},
+          "source": {"$ref": "#/$defs/citation"}
+        }
+      }
+    },
+    "harnesses": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["drawing_number", "nodes", "segments", "terminations"],
+        "properties": {
+          "drawing_number": {"type": "string"},
+          "revision": {"type": "string"},
+          "family": {"type": "string"},
+          "name": {"type": "string"},
+          "qty_per_set": {"type": "number"},
+          "overall_length_mm": {"type": ["number", "null"]},
+          "test_requirements": {"type": "string"},
+          "length_convention": {"type": "string"},
+          "labels": {"type": "array", "items": {"type": "object"}},
+          "tapes": {"type": "array", "items": {"type": "object"}},
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "kind"],
+              "properties": {
+                "id": {"type": "string"},
+                "kind": {"enum": ["connector", "breakout", "splice", "end", "label_point"]},
+                "housing_mpn": {"type": ["string", "null"]},
+                "label": {"type": "string"},
+                "mate_orientation": {"type": "string"}
+              }
+            }
+          },
+          "segments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "part_mpn", "from_node", "to_node", "length_mm"],
+              "properties": {
+                "id": {"type": "string"},
+                "part_mpn": {"type": "string"},
+                "from_node": {"type": "string"},
+                "to_node": {"type": "string"},
+                "length_mm": {"type": "number"},
+                "tol_mm": {"type": "number"},
+                "source": {"enum": ["reel", "preterminated", "cut_half"]},
+                "circuit": {"type": "string"},
+                "color": {"type": "string"},
+                "branch_angle_deg": {"type": ["number", "null"]},
+                "length_convention": {"type": "string"},
+                "citation": {"$ref": "#/$defs/citation"}
+              }
+            }
+          },
+          "terminations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "node", "segment", "ttype"],
+              "properties": {
+                "id": {"type": "string"},
+                "node": {"type": "string"},
+                "segment": {"type": "string"},
+                "end": {"enum": ["A", "B"]},
+                "ttype": {
+                  "enum": ["crimp_open_barrel", "crimp_closed_barrel", "crimp_hex",
+                           "solder_cup", "solder_sleeve", "idc", "screw", "weld",
+                           "preterminated", "shield_termination"]
+                },
+                "terminal_mpn": {"type": ["string", "null"]},
+                "housing_mpn": {"type": ["string", "null"]},
+                "cavity": {"type": ["string", "null"]},
+                "sealed": {"type": "boolean"},
+                "shielded": {"type": "boolean"},
+                "accessories": {"type": "array", "items": {"type": "string"}},
+                "process_params": {"type": "object"},
+                "citation": {"$ref": "#/$defs/citation"}
+              }
+            }
+          },
+          "citation": {"$ref": "#/$defs/citation"}
+        }
+      }
+    },
+    "customer_bom": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["line", "mpn_as_written", "qty"],
+        "properties": {
+          "line": {"type": "string"},
+          "mpn_as_written": {"type": "string"},
+          "description_as_written": {"type": "string"},
+          "qty": {"type": "number"},
+          "basis": {"enum": ["per_harness", "per_set"]},
+          "harness": {"type": ["string", "null"]},
+          "uom": {"type": "string"},
+          "notes": {"type": "string"},
+          "citation": {"$ref": "#/$defs/citation"}
+        }
+      }
+    },
+    "assumptions": {"type": "array", "items": {"type": "object", "required": ["id", "text"]}},
+    "open_items": {"type": "array", "items": {"type": "object", "required": ["id", "question"]}},
+    "process_steps": {"type": "array", "items": {"type": "object", "required": ["id", "station"]}},
+    "equipment_options": {"type": "array", "items": {"type": "object", "required": ["id", "name"]}},
+    "supplier_quote": {
+      "type": ["object", "null"],
+      "properties": {
+        "supplier": {"type": "string"},
+        "currency": {"type": "string"},
+        "quoted_per_set": {"type": ["number", "null"]},
+        "lines": {"type": "array", "items": {"type": "object"}},
+        "coverage_note": {"type": "string"},
+        "nre": {"type": ["number", "null"]},
+        "lead_time_weeks": {"type": ["number", "null"]},
+        "citation": {"$ref": "#/$defs/citation"}
+      }
+    },
+    "checkpoints": {"type": "object"}
+  },
+  "$defs": {
+    "citation": {
+      "type": "object",
+      "properties": {
+        "rank": {"type": "integer", "minimum": 1, "maximum": 6},
+        "doc": {"type": "string"},
+        "revision": {"type": "string"},
+        "clause": {"type": "string"},
+        "note": {"type": "string"},
+        "url": {"type": ["string", "null"]},
+        "url_verified": {"type": "boolean"}
+      }
+    }
+  }
+}

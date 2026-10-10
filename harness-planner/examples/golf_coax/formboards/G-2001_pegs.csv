@@ -1,0 +1,7 @@
+peg,x_mm_from_datum,y_mm_from_datum,kind,note
+P01,1300.0,160.0,nest,"SMA-STR-174 nest, keyed, axial"
+P02,100.0,160.0,nest,"BNC-STR-58 nest, keyed, axial"
+P03,1000.0,160.0,support,bundle support on S1
+P04,700.0,160.0,support,bundle support on S1
+P05,400.0,160.0,support,bundle support on S1
+P06,100.0,160.0,support,bundle support on S1

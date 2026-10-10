@@ -1,0 +1,26 @@
+{
+  "CONFIRM_ARCHITECTURE": {
+    "status": "confirmed",
+    "by": "owner (fixture)",
+    "date": "2025-11-05T10:00:00",
+    "notes": "architecture table reviewed; volumes are sets, not harnesses"
+  },
+  "CONFIRM_VOLUME_UNITS": {
+    "status": "confirmed",
+    "by": "owner (fixture)",
+    "date": "2025-11-05T10:00:00",
+    "notes": "sets/week confirmed: 10-50 planned, 1.5x/2x upper limits"
+  },
+  "RESOLVE_BLOCKERS": {
+    "status": "confirmed",
+    "by": "owner (fixture)",
+    "date": "2025-11-06T09:00:00",
+    "notes": "proposed defaults accepted for fixture run; real program waits for customer answers"
+  },
+  "VALIDATE_FIRST_BOARD": {
+    "status": "pending",
+    "by": "",
+    "date": "",
+    "notes": "build one harness on the printed overlay and measure before release"
+  }
+}

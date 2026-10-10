@@ -1,0 +1,5 @@
+BUILD SEQUENCE — D-1007 rev B (Diagnostic pigtail)
+
+ 1. Load HSG-DTM-2P into nest at (400, 160) (wedgelock up)
+ 2. Route segment S1 (DIAG, cut 306 mm) along its path; terminate per termination map
+ 3. Inspect per overlay inspection box; record on traveller; final length check against overlay

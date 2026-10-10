@@ -1,0 +1,4 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S3,IO3,W-FLRY-096,2200,10,0.0,6.0,2206.0,reel,"A: no termination at this end | B: strip 6 per [application spec: SYN-APPSPEC-DTM, Rev D, sec 2.3]"
+S1,IO1,W-FLRY-096,1800,10,4.0,0.0,1804.0,reel,"A: strip 4 per [product spec / part drawing: SYN-PS-GC, Rev A, table 1] | B: no termination at this end"
+S2,IO2,W-FLRY-050,700,8,0.0,2.8,702.8,reel,"A: no termination at this end | B: strip 2.8 per [application spec: SYN-APPSPEC-1001, Rev B, table 2]"

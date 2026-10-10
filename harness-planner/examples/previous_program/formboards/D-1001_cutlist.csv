@@ -1,0 +1,2 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S1,ETH-BB,PTA-ETH-2M,2000,10,0.0,0.0,2000.0,preterminated,A: pre-terminated end — no allowance | B: pre-terminated end — no allowance

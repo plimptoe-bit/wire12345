@@ -1,0 +1,5 @@
+peg,x_mm_from_datum,y_mm_from_datum,kind,note
+P01,600.0,160.0,nest,"DSUB-9S nest, keyed, D-face up"
+P02,300.0,160.0,support,bundle support on S3
+P03,900.0,160.0,support,bundle support on S2
+P04,600.0,460.0,support,bundle support on S1

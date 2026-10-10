@@ -1,0 +1,10 @@
+bucket,mpn,manufacturer,description,qty,uom,unit_price,price_note,ext_price,lead_time_weeks,distributor,url
+purchased,BNC-STR-58,SynRF,"BNC straight plug, crimp, for RG58 cable group",10000,ea,1.9,tier ≥10000; budgetary ±30%,19000.0,5,Mouser,URL not verified
+purchased,C-RG174,SynCable,"Coax RG174-type, 50 ohm, braid shield, jacket 2.8 mm, 80 C",400,m,0.55,tier ≥400; budgetary ±30%,220.0,4,DigiKey,URL not verified
+purchased,DSUB-9S,SynConn,"D-Sub 9-way socket, solder cup, max 0.6 mm2, wire insulation rated 105 C min for hand solder",260,ea,1.4,tier ≥260; budgetary ±30%,364.0,3,Farnell,URL not verified
+purchased,FER-174,SynRF,"Crimp ferrule for RG174 group, hex 4.22",300,ea,0.18,tier ≥300; budgetary ±30%,54.0,5,DigiKey,URL not verified
+purchased,HS-1248,SynShrink,"Heat-shrink 12.7 to 6.4, adhesive lined",10.08,m,2.1,tier ≥10.08; budgetary ±30%,21.17,2,RS,URL not verified
+purchased,PIN-SMA-174,SynRF,"SMA center pin, crimp, RG174 group",300,ea,0.4,tier ≥300; budgetary ±30%,120.0,5,DigiKey,URL not verified
+purchased,SMA-STR-174,SynRF,"SMA straight plug, crimp, for RG174 cable group",260,ea,2.9,tier ≥260; budgetary ±30%,754.0,5,DigiKey,URL not verified
+purchased,W-HOOK-22,SynWire,"Hook-up wire 0.34 mm2 (22 AWG), PVC 80 C",400,m,0.07,tier ≥400; budgetary ±30%,28.0,2,Mouser,URL not verified
+tooling,TOOL-SMA-HEX,SynTool,"Named hex crimp tool, 4.22 hex, RG174 group",1,ea,240.0,budgetary ±30%,240.0,4,—,URL not verified

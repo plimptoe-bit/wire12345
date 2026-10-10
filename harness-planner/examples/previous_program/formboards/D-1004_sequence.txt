@@ -1,0 +1,7 @@
+BUILD SEQUENCE — D-1004 rev B (Sealed power jumper)
+
+ 1. Load HSG-DTM-2P into nest at (700, 160) (wedgelock up)
+ 2. Load HSG-DTM-2S into nest at (100, 160) (wedgelock up)
+ 3. Route segment S1 (PWR, cut 612 mm) along its path; terminate per termination map
+ 4. Route segment S2 (GND, cut 612 mm) along its path; terminate per termination map
+ 5. Inspect per overlay inspection box; record on traveller; final length check against overlay

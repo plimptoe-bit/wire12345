@@ -1,0 +1,16 @@
+level,parent,item,description,category,qty_per_parent,qty_per_set,uom,origin,consigned,moq,source,weekly_qty_at_5_sets,weekly_qty_at_15_sets,weekly_qty_at_22.5_sets,weekly_qty_at_30_sets,weekly_order_qty_at_5_sets_incl_5%_scrap,weekly_order_qty_at_15_sets_incl_5%_scrap,weekly_order_qty_at_22.5_sets_incl_5%_scrap,weekly_order_qty_at_30_sets_incl_5%_scrap
+0,,SET GOLF-RF-2025,harness set,set,1,1,set,structure,no,,[unverified: no document],5,15,22.5,30,,,,
+1,SET GOLF-RF-2025,G-2001,RF jumper SMA-BNC,harness,1,1,ea,structure,no,,"[customer harness drawing: G-2001, Rev A]",5,15,22.5,30,,,,
+2,G-2001,G-2001/S1,segment RF1: 1200 mm of C-RG174 (reel),segment,1,1,ea,structure,no,,"[customer harness drawing: G-2001, Rev A, sheet 1]",5,15,22.5,30,,,,
+3,G-2001,SMA-STR-174,"SMA straight plug, crimp, for RG174 cable group",housing,1,1,ea,structure,no,10,"[customer harness drawing: G-2001, Rev A]",5,15,22.5,30,10,20,30,40
+3,G-2001,BNC-STR-58,"BNC straight plug, crimp, for RG58 cable group",housing,1,1,ea,structure,no,10000,"[customer harness drawing: G-2001, Rev A]",5,15,22.5,30,10000,10000,10000,10000
+3,G-2001,C-RG174,"Coax RG174-type, 50 ohm, braid shield, jacket 2.8 mm, 80 C",cable,1.2,1.2,m,structure,no,100,"[customer harness drawing: G-2001, Rev A, sheet 1]",6,18,27,36,100,100,100,100
+3,G-2001,PIN-SMA-174,"SMA center pin, crimp, RG174 group",terminal,1,1,ea,structure,no,100,"[application spec: SYN-SMA-174, Rev B, fig 2]",5,15,22.5,30,100,100,100,100
+3,G-2001,FER-174,"Crimp ferrule for RG174 group, hex 4.22",accessory,1,1,ea,structure,no,100,"[application spec: SYN-SMA-174, Rev B, fig 2]",5,15,22.5,30,100,100,100,100
+1,SET GOLF-RF-2025,G-2002,"Control pigtail, D-Sub solder",harness,1,1,ea,structure,no,,"[customer harness drawing: G-2002, Rev A]",5,15,22.5,30,,,,
+2,G-2002,G-2002/S1,segment C1: 500 mm of W-HOOK-22 (reel),segment,1,1,ea,structure,no,,[unverified: no document],5,15,22.5,30,,,,
+2,G-2002,G-2002/S2,segment C2: 500 mm of W-HOOK-22 (reel),segment,1,1,ea,structure,no,,[unverified: no document],5,15,22.5,30,,,,
+2,G-2002,G-2002/S3,segment C3: 500 mm of W-HOOK-22 (reel),segment,1,1,ea,structure,no,,[unverified: no document],5,15,22.5,30,,,,
+3,G-2002,DSUB-9S,"D-Sub 9-way socket, solder cup, max 0.6 mm2, wire insulation rated 105 C min for hand solder",housing,1,1,ea,structure,no,10,"[customer harness drawing: G-2002, Rev A]",5,15,22.5,30,10,20,30,40
+3,G-2002,W-HOOK-22,"Hook-up wire 0.34 mm2 (22 AWG), PVC 80 C",wire,1.5,1.5,m,structure,no,100,[unverified: no document],7.5,22.5,33.75,45,100,100,100,100
+3,G-2002,HS-1248,"Heat-shrink 12.7 to 6.4, adhesive lined",heat_shrink,0.04,0.04,m,structure,no,1,"[customer harness drawing: G-2002, Rev A]",0.2,0.6,0.9,1.2,1,1,1,1.26

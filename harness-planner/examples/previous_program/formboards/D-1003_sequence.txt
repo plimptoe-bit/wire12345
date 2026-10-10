@@ -1,0 +1,9 @@
+BUILD SEQUENCE — D-1003 rev B (Sensor jumper, 4-way small pitch)
+
+ 1. Load CONN-NANO-4 into nest at (550, 160) (latch up)
+ 2. Load CONN-NANO-4 into nest at (100, 160) (latch up)
+ 3. Route segment S1 (SENS1, cut 455.6 mm) along its path; terminate per termination map
+ 4. Route segment S2 (SENS2, cut 455.6 mm) along its path; terminate per termination map
+ 5. Route segment S3 (SENS3, cut 455.6 mm) along its path; terminate per termination map
+ 6. Apply label 'SNS-A' on S1 at 150 mm
+ 7. Inspect per overlay inspection box; record on traveller; final length check against overlay

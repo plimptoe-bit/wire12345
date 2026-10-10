@@ -1,0 +1,90 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2400.0mm" height="1200.0mm" viewBox="0 0 2400.0 1200.0" font-family="Helvetica, Arial, sans-serif">
+<rect x="0" y="0" width="2400.0" height="1200.0" fill="white" stroke="black" stroke-width="1"/>
+<line x1="0" y1="0" x2="0" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="100" y1="0" x2="100" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="200" y1="0" x2="200" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="300" y1="0" x2="300" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="400" y1="0" x2="400" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="500" y1="0" x2="500" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="600" y1="0" x2="600" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="700" y1="0" x2="700" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="800" y1="0" x2="800" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="900" y1="0" x2="900" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1000" y1="0" x2="1000" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1100" y1="0" x2="1100" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1200" y1="0" x2="1200" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1300" y1="0" x2="1300" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1400" y1="0" x2="1400" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1500" y1="0" x2="1500" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1600" y1="0" x2="1600" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1700" y1="0" x2="1700" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1800" y1="0" x2="1800" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="1900" y1="0" x2="1900" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="2000" y1="0" x2="2000" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="2100" y1="0" x2="2100" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="2200" y1="0" x2="2200" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="2300" y1="0" x2="2300" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="2400" y1="0" x2="2400" y2="1200.0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="0" x2="2400.0" y2="0" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="100" x2="2400.0" y2="100" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="200" x2="2400.0" y2="200" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="300" x2="2400.0" y2="300" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="400" x2="2400.0" y2="400" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="500" x2="2400.0" y2="500" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="600" x2="2400.0" y2="600" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="700" x2="2400.0" y2="700" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="800" x2="2400.0" y2="800" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="900" x2="2400.0" y2="900" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="1000" x2="2400.0" y2="1000" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="1100" x2="2400.0" y2="1100" stroke="#e5e5e5" stroke-width="0.3"/>
+<line x1="0" y1="1200" x2="2400.0" y2="1200" stroke="#e5e5e5" stroke-width="0.3"/>
+<path d="M 12 20 H 28 M 20 12 V 28" stroke="black" stroke-width="0.6"/>
+<circle cx="20" cy="20" r="5" fill="none" stroke="black" stroke-width="0.6"/>
+<path d="M 2372.0 20 H 2388.0 M 2380.0 12 V 28" stroke="black" stroke-width="0.6"/>
+<circle cx="2380.0" cy="20" r="5" fill="none" stroke="black" stroke-width="0.6"/>
+<path d="M 12 1180.0 H 28 M 20 1172.0 V 1188.0" stroke="black" stroke-width="0.6"/>
+<circle cx="20" cy="1180.0" r="5" fill="none" stroke="black" stroke-width="0.6"/>
+<path d="M 2372.0 1180.0 H 2388.0 M 2380.0 1172.0 V 1188.0" stroke="black" stroke-width="0.6"/>
+<circle cx="2380.0" cy="1180.0" r="5" fill="none" stroke="black" stroke-width="0.6"/>
+<g transform="translate(30,1158.0)"><rect x="0" y="0" width="100" height="6" fill="black"/><rect x="100" y="0" width="100" height="6" fill="white" stroke="black" stroke-width="0.5"/><text x="0" y="16" font-size="10">0</text><text x="95" y="16" font-size="10">100</text><text x="185" y="16" font-size="10">200 mm — SCALE 1:1</text></g>
+<path d="M 600.0 160.0 L 600.0 200.0" stroke="#1f77b4" stroke-width="8" fill="none" stroke-opacity="0.35"/>
+<text x="600.0" y="192.0" font-size="9" fill="#1f77b4">heat-shrink boot HS-1248 0–40 mm — over solder cups and strain relief</text>
+<path d="M 600.0 160.0 L 100.0 160.0" stroke="#333" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+<text x="100.0" y="174.0" font-size="10">S3 C3 500mm</text>
+<path d="M 600.0 160.0 L 1100.0 160.0" stroke="#333" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+<text x="1100.0" y="174.0" font-size="10">S2 C2 500mm</text>
+<path d="M 600.0 160.0 L 600.0 660.0" stroke="#333" stroke-width="1.6" fill="none" stroke-linejoin="round"/>
+<text x="600.0" y="674.0" font-size="10">S1 C1 500mm</text>
+<circle cx="600.0" cy="160.0" r="6" fill="none" stroke="#d62728" stroke-width="1.2"/>
+<text x="608.0" y="152.0" font-size="9" fill="#d62728">P01</text>
+<circle cx="300.0" cy="160.0" r="3.5" fill="none" stroke="#aaa" stroke-width="1.2"/>
+<circle cx="900.0" cy="160.0" r="3.5" fill="none" stroke="#aaa" stroke-width="1.2"/>
+<circle cx="600.0" cy="460.0" r="3.5" fill="none" stroke="#aaa" stroke-width="1.2"/>
+<rect x="590.0" y="182.0" width="170" height="77" fill="#fffbe8" stroke="#c90" stroke-width="0.6"/>
+<text x="594.0" y="194.0" font-size="9">X1  DSUB-9S</text>
+<text x="594.0" y="205.0" font-size="9">controller</text>
+<text x="594.0" y="216.0" font-size="9">cav 1: RD</text>
+<text x="594.0" y="227.0" font-size="9">cav 2: BK</text>
+<text x="594.0" y="238.0" font-size="9">cav 3: WH</text>
+<text x="594.0" y="249.0" font-size="9">orientation: D-face up</text>
+<circle cx="584.0" cy="146.0" r="8" fill="white" stroke="black" stroke-width="0.8"/>
+<text x="584.0" y="149.5" font-size="10" text-anchor="middle" font-weight="bold">1</text>
+<rect x="598.0" y="242.0" width="60" height="12" fill="white" stroke="#555" stroke-width="0.5"/>
+<text x="600.0" y="251.0" font-size="8">LBL CTL-1 @100mm</text>
+<rect x="1980.0" y="30" width="390" height="126" fill="#f4fff4" stroke="#2ca02c" stroke-width="0.8"/>
+<text x="1986.0" y="44" font-size="11" font-weight="bold">INSPECTION — IPC/WHMA-A-620 Class 2 (record on traveller)</text>
+<text x="1986.0" y="58" font-size="9">1. tug test every crimped termination (spec pull values on the termination map)</text>
+<text x="1986.0" y="72" font-size="9">2. secondary lock / wedgelock closed — visual, every connector</text>
+<text x="1986.0" y="86" font-size="9">3. label text + position legible against this overlay</text>
+<text x="1986.0" y="100" font-size="9">4. bend radius at folds and breakouts ≥ cable datasheet minimum</text>
+<text x="1986.0" y="114" font-size="9">5. final length check against this overlay (tolerances per drawing)</text>
+<text x="1986.0" y="128" font-size="9">6. solder joints per IPC/WHMA-A-620 Class 2 (wetting, no stress relief damage)</text>
+<text x="1986.0" y="142" font-size="9">7. program test: continuity; solder joints per IPC/WHMA-A-620 class 2</text>
+<rect x="1980.0" y="1080.0" width="390" height="76" fill="white" stroke="black" stroke-width="0.8"/>
+<text x="1988.0" y="1096.0" font-size="10">customer drawing: G-2002 rev A</text>
+<text x="1988.0" y="1112.0" font-size="10">board overlay rev: A-A  date: 2025-12-01</text>
+<text x="1988.0" y="1128.0" font-size="10">program: GOLF-RF-2025</text>
+<text x="1988.0" y="1144.0" font-size="10">change summary: initial generation from data model</text>
+<text x="30" y="28" font-size="9" fill="#555">NOTE: DRAFT — overlay not released: build and measure one harness on the first board before release (VALIDATE_FIRST_BOARD)</text>
+<text x="30" y="40" font-size="9" fill="#555">NOTE: dimension convention: point-to-point between node reference planes (default — confirm)</text>
+</svg>

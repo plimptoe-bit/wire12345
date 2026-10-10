@@ -38,3 +38,12 @@ a taskbar with a clock, and a proper "It is now safe to close this window" shutd
 ---
 
 *Wire XP is a loving homage to a classic desktop look. It is not affiliated with Microsoft.*
+
+## Also in this repository
+
+**[`harness-planner/`](harness-planner/)** — a wire-harness program planning
+tool: data model, ingestion pipeline with confirmation checkpoints, rules
+engine (BOM reconciliation, compatibility checks, accessory cascade, tooling
+reuse), and generators for BOMs, termination maps, tooling lists, line plans,
+costing with live-formula spreadsheets, make-vs-buy, procurement CSVs and
+to-scale formboard drawings. See its [README](harness-planner/README.md).

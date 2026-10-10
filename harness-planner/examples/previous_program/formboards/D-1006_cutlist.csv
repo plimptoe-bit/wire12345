@@ -1,0 +1,4 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S1,A1/A2,W-TWIN-22,800,10,7.0,0.0,807.0,reel,"A: strip 3.5 per [product spec / part drawing: SYN-PS-M12, Rev A, table 4 (validated combinations)]; strip 3.5 per [product spec / part drawing: SYN-PS-M12, Rev A, table 4 (validated combinations)] | B: no termination at this end"
+S2,B1/B2,W-TWIN-22,800,10,7.0,0.0,807.0,reel,"A: strip 3.5 per [product spec / part drawing: SYN-PS-M12, Rev A, table 4 (validated combinations)]; strip 3.5 per [product spec / part drawing: SYN-PS-M12, Rev A, table 4 (validated combinations)] | B: no termination at this end"
+S3,C1/C2,W-TWIN-22,800,10,7.0,0.0,807.0,reel,"A: strip 3.5 per [product spec / part drawing: SYN-PS-M12, Rev A, table 4 (validated combinations)]; strip 3.5 per [product spec / part drawing: SYN-PS-M12, Rev A, table 4 (validated combinations)] | B: no termination at this end"

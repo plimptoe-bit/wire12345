@@ -1,0 +1,2 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S1,ETH-SPUR,PTA-ETH-2M,1000,8,0.0,30.200000000000003,1030.2,cut_half,"A: pre-terminated end — no allowance | B: strip 2.6 per [application spec: SYN-APPSPEC-2001, Rev C, table 3]; shield fold-back 25 (assumed); strip 2.6 per [application spec: SYN-APPSPEC-2001, Rev C, table 3]"

@@ -1,0 +1,6 @@
+harness,termination,node,cavity,segment,wire,conductor_mm2,type,terminal,housing,sealed,shielded,accessories,process_params,source
+G-2001,T1,X1,—,S1 RF1,C-RG174,0.2,crimp_hex,PIN-SMA-174,SMA-STR-174,no,no,FER-174,strip 3.0 mm; pull ≥30 N; hex_mm=4.22; strip_stack=8.0/5.5/3.0 per SYN-SMA-174 fig 2,"[application spec: SYN-SMA-174, Rev B, table 2]"
+G-2001,T2,X2,—,S1 RF1,C-RG174,0.2,crimp_hex,—,BNC-STR-58,no,no,—,hex_mm=6.48,"[customer harness drawing: G-2001, Rev A, sheet 1]"
+G-2002,T1,X1,1,S1 C1,W-HOOK-22,0.34,solder_cup,—,DSUB-9S,no,no,—,solder_class=IPC/WHMA-A-620 class 2; tin_length_mm=3.0,[unverified: no document]
+G-2002,T2,X1,2,S2 C2,W-HOOK-22,0.34,solder_cup,—,DSUB-9S,no,no,—,solder_class=IPC/WHMA-A-620 class 2; tin_length_mm=3.0,[unverified: no document]
+G-2002,T3,X1,3,S3 C3,W-HOOK-22,0.34,solder_cup,—,DSUB-9S,no,no,—,solder_class=IPC/WHMA-A-620 class 2; tin_length_mm=3.0,[unverified: no document]

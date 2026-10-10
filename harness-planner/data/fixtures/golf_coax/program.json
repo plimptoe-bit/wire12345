@@ -1,0 +1,151 @@
+{
+  "program": {
+    "name": "GOLF-RF-2025",
+    "customer": "Golf Instruments (SYNTHETIC FIXTURE — solder/coax sample; all part numbers, documents and prices invented)",
+    "revision": "A",
+    "date": "2025-12-01",
+    "volume_unit": "sets/week",
+    "volumes_per_week": [5, 15],
+    "upper_limit_factors": [1.5, 2.0],
+    "horizon_weeks": 40,
+    "selling_price_per_set": 95.0,
+    "workmanship_standard": "IPC/WHMA-A-620 Class 2",
+    "rates": {
+      "technician_rate_per_hour": 38.0,
+      "loaded_multiplier": 1.6,
+      "productive_hours_per_week": 32.0,
+      "weeks_per_year": 48,
+      "depreciation_years": 3,
+      "overhead_per_set": 2.0,
+      "scrap_fraction": 0.05,
+      "currency": "USD",
+      "source": {"rank": 6, "note": "owner-provided rates (fixture)"}
+    }
+  },
+  "documents": [
+    {"id": "doc-sma", "number": "SYN-SMA-174", "title": "SMA straight plug for RG174 group — assembly instruction", "revision": "Rev B", "rank": 1, "notes": "synthetic"},
+    {"id": "doc-dsub", "number": "SYN-DSUB-9", "title": "D-Sub 9-way solder cup — product spec", "revision": "Rev C", "rank": 2, "notes": "synthetic"},
+    {"id": "doc-dwg-g", "number": "G-2001..G-2002", "title": "Customer harness drawings (Golf)", "revision": "Rev A", "rank": 4, "notes": "synthetic"}
+  ],
+  "parts": [
+    {"mpn": "C-RG174", "manufacturer": "SynCable", "description": "Coax RG174-type, 50 ohm, braid shield, jacket 2.8 mm, 80 C", "category": "cable", "uom": "m", "package_qty": 100, "moq": 100,
+     "price_tiers": [{"min_qty": 1, "unit_price": 0.55}], "lead_time_weeks": 4,
+     "distributor_links": [{"distributor": "DigiKey", "url": null, "url_verified": false}],
+     "attrs": {"conductor_mm2": 0.2, "shield": "braid", "jacket_od_mm": 2.8, "coax_group": "RG174", "impedance_ohm": 50, "temp_rating_c": 80, "min_bend_radius_mm": 15},
+     "source": {"rank": 2, "doc": "SYN-CD-RG174", "revision": "Rev A", "clause": "table 1", "note": "synthetic"}},
+    {"mpn": "W-HOOK-22", "manufacturer": "SynWire", "description": "Hook-up wire 0.34 mm2 (22 AWG), PVC 80 C", "category": "wire", "uom": "m", "package_qty": 100, "moq": 100,
+     "price_tiers": [{"min_qty": 1, "unit_price": 0.07}], "lead_time_weeks": 2,
+     "distributor_links": [{"distributor": "Mouser", "url": null, "url_verified": false}],
+     "attrs": {"conductor_mm2": 0.34, "insulation_od_mm": 1.6, "insulation_od_range_mm": [1.5, 1.7], "temp_rating_c": 80},
+     "source": {"rank": 2, "doc": "SYN-WD-HOOK", "revision": "Rev A", "clause": "table 1", "note": "synthetic"}},
+    {"mpn": "SMA-STR-174", "manufacturer": "SynRF", "description": "SMA straight plug, crimp, for RG174 cable group", "category": "housing", "package_qty": 10, "moq": 10,
+     "price_tiers": [{"min_qty": 1, "unit_price": 2.9}], "lead_time_weeks": 5,
+     "distributor_links": [{"distributor": "DigiKey", "url": null, "url_verified": false}],
+     "governing_docs": ["doc-sma"],
+     "attrs": {"cable_groups": ["RG174", "RG316"],
+               "coax_strip_stack_mm": {"jacket": 8.0, "braid": 5.5, "dielectric": 3.0},
+               "ferrule_hex_mm": 4.22},
+     "source": {"rank": 1, "doc": "SYN-SMA-174", "revision": "Rev B", "clause": "fig 2 strip stack", "note": "synthetic"}},
+    {"mpn": "BNC-STR-58", "manufacturer": "SynRF", "description": "BNC straight plug, crimp, for RG58 cable group", "category": "housing", "package_qty": 10, "moq": 10000,
+     "price_tiers": [{"min_qty": 1, "unit_price": 1.9}], "lead_time_weeks": 5,
+     "distributor_links": [{"distributor": "Mouser", "url": null, "url_verified": false}],
+     "attrs": {"cable_groups": ["RG58"], "ferrule_hex_mm": 6.48},
+     "source": {"rank": 2, "doc": "SYN-BNC-58", "revision": "Rev A", "clause": "table 1", "note": "synthetic; MOQ 10000 as quoted (NCNR)"}},
+    {"mpn": "FER-174", "manufacturer": "SynRF", "description": "Crimp ferrule for RG174 group, hex 4.22", "category": "accessory", "package_qty": 100, "moq": 100,
+     "price_tiers": [{"min_qty": 1, "unit_price": 0.18}], "lead_time_weeks": 5,
+     "distributor_links": [{"distributor": "DigiKey", "url": null, "url_verified": false}],
+     "attrs": {"crimp": {"form": "hex", "strip_length_mm": 8.0}},
+     "source": {"rank": 1, "doc": "SYN-SMA-174", "revision": "Rev B", "clause": "table 2", "note": "synthetic"}},
+    {"mpn": "PIN-SMA-174", "manufacturer": "SynRF", "description": "SMA center pin, crimp, RG174 group", "category": "terminal", "package_qty": 100, "moq": 100,
+     "price_tiers": [{"min_qty": 1, "unit_price": 0.4}], "lead_time_weeks": 5,
+     "distributor_links": [{"distributor": "DigiKey", "url": null, "url_verified": false}],
+     "governing_docs": ["doc-sma"],
+     "attrs": {"contact_family": "SMA-174-SYN", "wire_range_mm2": [0.15, 0.25],
+               "crimp": {"form": "hex", "strip_length_mm": 3.0, "pull_force_min_n": 30},
+               "named_tools": ["TOOL-SMA-HEX"]},
+     "source": {"rank": 1, "doc": "SYN-SMA-174", "revision": "Rev B", "clause": "table 2", "note": "synthetic"}},
+    {"mpn": "DSUB-9S", "manufacturer": "SynConn", "description": "D-Sub 9-way socket, solder cup, max 0.6 mm2, wire insulation rated 105 C min for hand solder", "category": "housing", "package_qty": 10, "moq": 10,
+     "price_tiers": [{"min_qty": 1, "unit_price": 1.4}], "lead_time_weeks": 3,
+     "distributor_links": [{"distributor": "Farnell", "url": null, "url_verified": false}],
+     "governing_docs": ["doc-dsub"],
+     "attrs": {"cavities": 9, "solder_cup_max_mm2": 0.6, "min_wire_temp_rating_c": 105},
+     "source": {"rank": 2, "doc": "SYN-DSUB-9", "revision": "Rev C", "clause": "sec 4 (solder requirements)", "note": "synthetic"}},
+    {"mpn": "HS-1248", "manufacturer": "SynShrink", "description": "Heat-shrink 12.7 to 6.4, adhesive lined", "category": "heat_shrink", "uom": "m", "package_qty": 1, "moq": 1,
+     "price_tiers": [{"min_qty": 1, "unit_price": 2.1}], "lead_time_weeks": 2,
+     "distributor_links": [{"distributor": "RS", "url": null, "url_verified": false}],
+     "source": {"rank": 4, "doc": "G-2002", "revision": "Rev A", "note": "synthetic"}},
+    {"mpn": "TOOL-SMA-HEX", "manufacturer": "SynTool", "description": "Named hex crimp tool, 4.22 hex, RG174 group", "category": "tool",
+     "price_tiers": [{"min_qty": 1, "unit_price": 240.0}], "lead_time_weeks": 4,
+     "distributor_links": [{"distributor": "DigiKey", "url": null, "url_verified": false}],
+     "source": {"rank": 1, "doc": "SYN-SMA-174", "revision": "Rev B", "clause": "tooling table", "note": "synthetic"}}
+  ],
+
+  "harnesses": [
+    {"drawing_number": "G-2001", "revision": "A", "family": "coax", "name": "RF jumper SMA-BNC", "qty_per_set": 1,
+     "test_requirements": "VNA return loss < -20 dB to 1 GHz",
+     "length_convention": "connector reference plane to reference plane",
+     "citation": {"rank": 4, "doc": "G-2001", "revision": "Rev A"},
+     "nodes": [
+       {"id": "X1", "kind": "connector", "housing_mpn": "SMA-STR-174", "label": "radio", "mate_orientation": "axial"},
+       {"id": "X2", "kind": "connector", "housing_mpn": "BNC-STR-58", "label": "antenna", "mate_orientation": "axial"}],
+     "segments": [
+       {"id": "S1", "part_mpn": "C-RG174", "from_node": "X1", "to_node": "X2", "length_mm": 1200, "tol_mm": 10, "source": "reel", "circuit": "RF1",
+        "citation": {"rank": 4, "doc": "G-2001", "revision": "Rev A", "clause": "sheet 1"}}],
+     "terminations": [
+       {"id": "T1", "node": "X1", "segment": "S1", "end": "A", "ttype": "crimp_hex", "terminal_mpn": "PIN-SMA-174", "housing_mpn": "SMA-STR-174",
+        "accessories": ["FER-174"], "process_params": {"hex_mm": 4.22, "strip_stack": "8.0/5.5/3.0 per SYN-SMA-174 fig 2"},
+        "citation": {"rank": 1, "doc": "SYN-SMA-174", "revision": "Rev B", "clause": "fig 2"}},
+       {"id": "T2", "node": "X2", "segment": "S1", "end": "B", "ttype": "crimp_hex", "housing_mpn": "BNC-STR-58",
+        "process_params": {"hex_mm": 6.48},
+        "citation": {"rank": 4, "doc": "G-2001", "revision": "Rev A", "clause": "sheet 1"}}]},
+
+    {"drawing_number": "G-2002", "revision": "A", "family": "solder", "name": "Control pigtail, D-Sub solder", "qty_per_set": 1,
+     "test_requirements": "continuity; solder joints per IPC/WHMA-A-620 class 2",
+     "citation": {"rank": 4, "doc": "G-2002", "revision": "Rev A"},
+     "labels": [{"text": "CTL-1", "segment": "S1", "offset_mm": 100}],
+     "tapes": [{"mpn": "HS-1248", "segment": "S1", "from_mm": 0, "to_mm": 40, "kind": "heat-shrink boot", "note": "over solder cups and strain relief"}],
+     "nodes": [
+       {"id": "X1", "kind": "connector", "housing_mpn": "DSUB-9S", "label": "controller", "mate_orientation": "D-face up"},
+       {"id": "E1", "kind": "end", "label": "flying leads 1"},
+       {"id": "E2", "kind": "end", "label": "flying leads 2"},
+       {"id": "E3", "kind": "end", "label": "flying leads 3"}],
+     "segments": [
+       {"id": "S1", "part_mpn": "W-HOOK-22", "from_node": "X1", "to_node": "E1", "length_mm": 500, "tol_mm": 5, "source": "reel", "circuit": "C1", "color": "RD"},
+       {"id": "S2", "part_mpn": "W-HOOK-22", "from_node": "X1", "to_node": "E2", "length_mm": 500, "tol_mm": 5, "source": "reel", "circuit": "C2", "color": "BK"},
+       {"id": "S3", "part_mpn": "W-HOOK-22", "from_node": "X1", "to_node": "E3", "length_mm": 500, "tol_mm": 5, "source": "reel", "circuit": "C3", "color": "WH"}],
+     "terminations": [
+       {"id": "T1", "node": "X1", "segment": "S1", "end": "A", "ttype": "solder_cup", "housing_mpn": "DSUB-9S", "cavity": "1",
+        "process_params": {"solder_class": "IPC/WHMA-A-620 class 2", "tin_length_mm": 3.0}},
+       {"id": "T2", "node": "X1", "segment": "S2", "end": "A", "ttype": "solder_cup", "housing_mpn": "DSUB-9S", "cavity": "2",
+        "process_params": {"solder_class": "IPC/WHMA-A-620 class 2", "tin_length_mm": 3.0}},
+       {"id": "T3", "node": "X1", "segment": "S3", "end": "A", "ttype": "solder_cup", "housing_mpn": "DSUB-9S", "cavity": "3",
+        "process_params": {"solder_class": "IPC/WHMA-A-620 class 2", "tin_length_mm": 3.0}}]}
+  ],
+
+  "customer_bom": [
+    {"line": "G01", "mpn_as_written": "C-RG174", "description_as_written": "Coax RG174", "qty": 1.2, "basis": "per_harness", "harness": "G-2001", "uom": "m", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G02", "mpn_as_written": "SMA-STR-174", "description_as_written": "SMA plug", "qty": 1, "basis": "per_harness", "harness": "G-2001", "uom": "ea", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G03", "mpn_as_written": "BNC-STR-58", "description_as_written": "BNC plug", "qty": 1, "basis": "per_harness", "harness": "G-2001", "uom": "ea", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G04", "mpn_as_written": "PIN-SMA-174", "description_as_written": "SMA center pin", "qty": 1, "basis": "per_harness", "harness": "G-2001", "uom": "ea", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G05", "mpn_as_written": "FER-174", "description_as_written": "Ferrule", "qty": 1, "basis": "per_harness", "harness": "G-2001", "uom": "ea", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G06", "mpn_as_written": "DSUB-9S", "description_as_written": "D-Sub 9 socket", "qty": 1, "basis": "per_harness", "harness": "G-2002", "uom": "ea", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G07", "mpn_as_written": "W-HOOK-22", "description_as_written": "Hook-up wire 22 AWG", "qty": 1.5, "basis": "per_harness", "harness": "G-2002", "uom": "m", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G08", "mpn_as_written": "HS-1248", "description_as_written": "Heat-shrink", "qty": 0.04, "basis": "per_harness", "harness": "G-2002", "uom": "m", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}},
+    {"line": "G09", "mpn_as_written": "tape, see drawing", "description_as_written": "tape, see drawing", "qty": 1, "basis": "per_set", "uom": "ea", "citation": {"rank": 4, "doc": "customer BOM (Golf)", "revision": "rev A"}}
+  ],
+
+  "equipment_options": [
+    {"id": "EQ-VNA", "name": "1-port VNA for RF test", "eq_class": "tester", "cost_low": 1200, "cost_high": 4000, "rate_per_hour": 20,
+     "one_time_setup_h": 4, "changeover_min": 5, "service_interval": "annual", "calibration_cost_per_year": 300, "life_years": 8,
+     "phase": "buy_now", "phase_reason": "return-loss test is a drawing requirement (G-2001)", "lead_time_weeks": 3,
+     "source": {"rank": 6, "note": "budgetary vendor range (fixture)"}}
+  ],
+
+  "supplier_quote": null,
+
+  "assumptions": [
+    {"id": "A-VOL-G", "text": "Volumes are in SETS per week", "status": "confirmed", "impact": "all outputs", "source": {"rank": 6, "note": "owner statement"}},
+    {"id": "A-SOLDER", "text": "Hand solder, SAC305, iron 370 C; class 2 workmanship", "status": "open", "impact": "solder time standards and inspection", "source": {"rank": 6, "note": "shop default"}}
+  ],
+  "open_items": []
+}

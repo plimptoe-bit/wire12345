@@ -1,0 +1,2 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S1,RF1,C-RG174,1200,10,3.0,5.0,1208.0,reel,"A: strip 3 per [application spec: SYN-SMA-174, Rev B, table 2] | B: strip 5 (assumed)"

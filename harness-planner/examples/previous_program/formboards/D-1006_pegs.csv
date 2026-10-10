@@ -1,0 +1,10 @@
+peg,x_mm_from_datum,y_mm_from_datum,kind,note
+P01,900.0,160.0,nest,"INSERT-M12 nest, keyed, keyway 12 o'clock"
+P02,900.0,380.0,nest,"INSERT-M12 nest, keyed, keyway 12 o'clock"
+P03,900.0,600.0,nest,"INSERT-M12 nest, keyed, keyway 12 o'clock"
+P04,600.0,160.0,support,bundle support on S1
+P05,300.0,160.0,support,bundle support on S1
+P06,600.0,380.0,support,bundle support on S2
+P07,300.0,380.0,support,bundle support on S2
+P08,600.0,600.0,support,bundle support on S3
+P09,300.0,600.0,support,bundle support on S3

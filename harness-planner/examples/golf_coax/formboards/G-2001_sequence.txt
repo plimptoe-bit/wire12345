@@ -1,0 +1,7 @@
+BUILD SEQUENCE — G-2001 rev A (RF jumper SMA-BNC)
+
+ 1. Load SMA-STR-174 into nest at (1300, 160) (axial)
+ 2. Load BNC-STR-58 into nest at (100, 160) (axial)
+ 3. Route segment S1 (RF1, cut 1208 mm) along its path; terminate per termination map
+ 4. Fit FER-174 at X1 (T1); close locks
+ 5. Inspect per overlay inspection box; record on traveller; final length check against overlay

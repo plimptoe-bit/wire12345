@@ -1,0 +1,3 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S1,PWR,W-FLRY-096,600,8,6.0,6.0,612.0,reel,"A: strip 6 per [application spec: SYN-APPSPEC-DTM, Rev D, sec 2.3] | B: strip 6 per [application spec: SYN-APPSPEC-DTM, Rev D, sec 2.3]"
+S2,GND,W-FLRY-096,600,8,6.0,6.0,612.0,reel,"A: strip 6 per [application spec: SYN-APPSPEC-DTM, Rev D, sec 2.3] | B: strip 6 per [application spec: SYN-APPSPEC-DTM, Rev D, sec 2.3]"

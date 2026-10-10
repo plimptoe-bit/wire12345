@@ -1,0 +1,6 @@
+BUILD SEQUENCE — D-1001 rev B (Ethernet backbone jumper)
+
+ 1. Load CONN-MAT-HDR into nest at (2100, 160) (latch up)
+ 2. Load CONN-MAT-HDR into nest at (100, 160) (latch up)
+ 3. Route segment S1 (ETH-BB, cut 2000 mm) along its path; terminate per termination map
+ 4. Inspect per overlay inspection box; record on traveller; final length check against overlay

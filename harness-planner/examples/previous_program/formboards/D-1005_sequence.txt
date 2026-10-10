@@ -1,0 +1,11 @@
+BUILD SEQUENCE — D-1005 rev B (I/O harness with branch)
+
+ 1. Load HSG-GC-2 into nest at (657, 380) (latch up)
+ 2. Load CONN-NANO-4 into nest at (2300, 860) (latch up)
+ 3. Load HSG-DTM-2S into nest at (100, 160) (wedgelock up)
+ 4. Route segment S3 (IO3, cut 2206 mm) along its path; terminate per termination map
+ 5. Route segment S1 (IO1, cut 1804 mm) along its path; terminate per termination map
+ 6. Route segment S2 (IO2, cut 702.8 mm) along its path; terminate per termination map
+ 7. Tape spiral wrap on S1 200–900 mm — no tape within 50 mm of breakout
+ 8. Apply label 'IO-A' on S1 at 400 mm
+ 9. Inspect per overlay inspection box; record on traveller; final length check against overlay

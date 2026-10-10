@@ -1,0 +1,4 @@
+segment,circuit,material_mpn,drawing_length_mm,tol_mm,allowance_A_mm,allowance_B_mm,cut_length_mm,source,allowance_basis
+S1,SENS1,W-FLRY-035,450,5,2.8,2.8,455.6,reel,"A: strip 2.8 per [application spec: SYN-APPSPEC-1001, Rev B, table 2] | B: strip 2.8 per [application spec: SYN-APPSPEC-1001, Rev B, table 2]"
+S2,SENS2,W-FLRY-035,450,5,2.8,2.8,455.6,reel,"A: strip 2.8 per [application spec: SYN-APPSPEC-1001, Rev B, table 2] | B: strip 2.8 per [application spec: SYN-APPSPEC-1001, Rev B, table 2]"
+S3,SENS3,W-M22,450,5,2.8,2.8,455.6,reel,"A: strip 2.8 per [application spec: SYN-APPSPEC-1001, Rev B, table 2] | B: strip 2.8 per [application spec: SYN-APPSPEC-1001, Rev B, table 2]"

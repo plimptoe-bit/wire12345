@@ -1,0 +1,20 @@
+peg,x_mm_from_datum,y_mm_from_datum,kind,note
+P01,657.1,380.0,nest,"HSG-GC-2 nest, keyed, latch up"
+P02,2300.0,160.0,breakout,BR1
+P03,2300.0,860.0,nest,"CONN-NANO-4 nest, keyed, latch up"
+P04,100.0,160.0,nest,"HSG-DTM-2S nest, keyed, wedgelock up"
+P05,2300.0,270.0,fold,"pegged U-turn, r=50 mm"
+P06,2000.0,160.0,support,bundle support on S3
+P07,1700.0,160.0,support,bundle support on S3
+P08,1400.0,160.0,support,bundle support on S3
+P09,1100.0,160.0,support,bundle support on S3
+P10,800.0,160.0,support,bundle support on S3
+P11,500.0,160.0,support,bundle support on S3
+P12,200.0,160.0,support,bundle support on S3
+P13,957.1,380.0,support,bundle support on S1
+P14,1257.1,380.0,support,bundle support on S1
+P15,1557.1,380.0,support,bundle support on S1
+P16,1857.1,380.0,support,bundle support on S1
+P17,2157.1,380.0,support,bundle support on S1
+P18,2300.0,460.0,support,bundle support on S2
+P19,2300.0,760.0,support,bundle support on S2
