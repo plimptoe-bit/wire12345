@@ -357,8 +357,19 @@ const Demo = {
 
 /* ======================================================================= */
 const S = {backend: null, programs: [], progId: null, files: [],
-           view: null, lastCheck: {}};
+           view: null, lastCheck: {}, currentPath: null, downloads: null};
 const $ = (id) => document.getElementById(id);
+
+/* On claude.ai the viewer grants saves through the downloads capability;
+   resolve it in the background and add the Save button once it arrives. */
+(async () => {
+  try {
+    if (window.claude?.use) {
+      S.downloads = await window.claude.use("downloads");
+      if (S.downloads && S.currentPath) openFile(S.currentPath);
+    }
+  } catch (e) { /* design for absence */ }
+})();
 
 function esc(s) { return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;")
   .replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
@@ -572,6 +583,7 @@ function setAddr(leaf) {
 /* ---- views -------------------------------------------------------------*/
 function showHome() {
   const p = prog(); if (!p) return;
+  S.currentPath = null;
   setAddr("");
   $("st-file").textContent = "";
   const cps = p.checkpoints || {};
@@ -614,6 +626,7 @@ function showHome() {
 
 function showFindings() {
   const chk = S.lastCheck[S.progId]; if (!chk) return;
+  S.currentPath = null;
   setAddr("check results");
   const order = {blocker: 0, warning: 1, info: 2};
   const rows = [...chk.findings].sort((a, b) =>
@@ -638,10 +651,12 @@ function showFindings() {
   $("viewer").innerHTML = h;
 }
 
-const canDownload = () => S.backend === Live || location.protocol === "file:";
+const canDownload = () =>
+  S.backend === Live || location.protocol === "file:" || !!S.downloads;
 
 async function openFile(path) {
   const f = S.files.find(x => x.path === path); if (!f) return;
+  S.currentPath = path;
   setAddr(f.name);
   $("st-file").textContent = `${f.name} — ${f.size_kb} KB`;
   const v = $("viewer");
@@ -680,25 +695,42 @@ async function openFile(path) {
   hookDownload(f, text);
 }
 
+function demoBytes(f, text) {
+  if (text != null) return text;
+  const b64 = Demo.fileB64 && Demo.fileB64(S.progId, f.path);
+  if (!b64) return null;
+  const bin = atob(b64), arr = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+  return arr;
+}
+
 function hookDownload(f, text) {
   const b = $("v-dl"); if (!b) return;
-  b.onclick = () => {
+  b.onclick = async () => {
+    const fname = f.name.split("/").pop();
     if (S.backend === Live) {
       location.href = Live.fileURL(S.progId, f.path, true);
       return;
     }
-    let blob;
-    if (text != null) blob = new Blob([text], {type: "text/plain"});
-    else {
-      const b64 = Demo.fileB64(S.progId, f.path);
-      if (!b64) { dialog("Save a copy", "This file is not packed into the demo.", null, "⚠️"); return; }
-      const bin = atob(b64), arr = new Uint8Array(bin.length);
-      for (let i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
-      blob = new Blob([arr]);
+    const data = demoBytes(f, text);
+    if (data == null) {
+      dialog("Save a copy", "This file is not packed into the demo.", null, "⚠️");
+      return;
     }
+    if (S.downloads) {               // claude.ai viewer: capability save
+      try { await S.downloads.save({filename: fname, data}); }
+      catch (e) {
+        if (e && e.code !== "declined")
+          dialog("Save a copy", "Could not save: " + esc(e.message || e.code),
+                 null, "⚠️");
+      }
+      return;
+    }
+    const blob = data instanceof Uint8Array ? new Blob([data])
+      : new Blob([data], {type: "text/plain"});
     const a = document.createElement("a");
     a.href = URL.createObjectURL(blob);
-    a.download = f.name.split("/").pop();
+    a.download = fname;
     a.click();
     setTimeout(() => URL.revokeObjectURL(a.href), 4000);
   };
