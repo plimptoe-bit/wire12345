@@ -1,0 +1,996 @@
+<!DOCTYPE html>
+<!-- Wire XP — a whole little computer in one file. Double-click this file to start it. -->
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wire XP</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230a53e8'/%3E%3Ctext x='16' y='23' font-size='18' font-family='Tahoma,sans-serif' font-weight='bold' font-style='italic' fill='white' text-anchor='middle'%3EW%3C/text%3E%3C/svg%3E">
+<style>
+  :root{
+    --luna-blue:#0a53e8;
+    --win-face:#ece9d8;
+    --sel-blue:#316ac5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%; overflow:hidden;}
+  body{
+    font-family:Tahoma,"Segoe UI",Verdana,sans-serif;
+    font-size:12px;
+    background:#000;
+    -webkit-user-select:none; user-select:none;
+  }
+  button{font-family:inherit; cursor:pointer;}
+
+  /* ============ Boot screen ============ */
+  #boot{
+    position:fixed; inset:0; z-index:9000;
+    background:#000; color:#fff;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:40px;
+  }
+  .boot-logo{text-align:center;}
+  .boot-logo .big{font-size:52px; font-weight:bold; letter-spacing:1px;}
+  .boot-logo .big em{color:#ff8c1a; font-style:normal;}
+  .boot-logo .xp{color:#ff8c1a; font-style:italic; font-weight:bold; font-size:30px; vertical-align:top;}
+  .boot-logo .sub{color:#aaa; font-size:13px; margin-top:6px;}
+  .boot-bar{
+    width:200px; height:16px;
+    border:2px solid #8a8a8a; border-radius:4px;
+    overflow:hidden; position:relative;
+  }
+  .boot-bar i{
+    position:absolute; top:2px; left:-60px;
+    width:46px; height:8px;
+    background:linear-gradient(90deg,#1c42c8,#3d7bf0,#1c42c8);
+    border-radius:2px;
+    animation:bootslide 1.4s linear infinite;
+  }
+  @keyframes bootslide{to{left:210px;}}
+  #boot .hint{color:#555; font-size:11px; position:absolute; bottom:24px;}
+
+  /* ============ Login / shutdown screens ============ */
+  .bluescene{
+    position:fixed; inset:0; z-index:8900;
+    display:flex; flex-direction:column;
+    color:#fff;
+  }
+  .bluescene .band{height:76px; background:#00309c; flex:none;}
+  .bluescene .band.top{border-bottom:2px solid #5d82df;}
+  .bluescene .band.bottom{border-top:2px solid #e8a858; display:flex; align-items:center; padding:0 40px; font-size:12px; color:#cdd8f5;}
+  .bluescene .mid{
+    flex:1; display:flex; align-items:center; justify-content:center; gap:60px;
+    background:linear-gradient(180deg,#7aa1e6 0%,#5c84de 50%,#4a71cf 100%);
+  }
+  .login-left{font-size:26px; font-weight:bold; text-shadow:1px 2px 3px rgba(0,0,40,.4); text-align:right;}
+  .login-left small{display:block; font-size:13px; font-weight:normal; margin-top:8px; color:#e7eeff;}
+  .login-divider{width:2px; align-self:stretch; margin:60px 0; background:linear-gradient(180deg,transparent,#cdd9f7,transparent);}
+  .user-tile{
+    display:flex; align-items:center; gap:14px;
+    padding:12px 40px 12px 14px; border-radius:8px;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.25);
+    cursor:pointer; transition:background .15s;
+  }
+  .user-tile:hover{background:rgba(255,255,255,.3);}
+  .user-tile .avatar{
+    width:56px; height:56px; border-radius:8px; border:2px solid #fff;
+    background:linear-gradient(135deg,#ffd97a,#ff9d3c);
+    display:flex; align-items:center; justify-content:center; font-size:34px;
+  }
+  .user-tile .uname{font-size:20px; font-weight:bold; text-shadow:1px 1px 2px rgba(0,0,40,.4);}
+  .user-tile .usub{font-size:11px; color:#dfe8ff;}
+  .shut-msg{font-size:24px; font-weight:bold; text-shadow:1px 2px 3px rgba(0,0,40,.4); text-align:center;}
+  .shut-msg small{display:block; font-size:13px; font-weight:normal; margin-top:10px; color:#e7eeff;}
+  .shut-btn{
+    margin-top:26px; padding:8px 22px; font-size:13px; border-radius:4px;
+    border:1px solid #fff; color:#fff; background:rgba(255,255,255,.15);
+  }
+  .shut-btn:hover{background:rgba(255,255,255,.35);}
+
+  /* ============ Desktop ============ */
+  #desktop{
+    position:fixed; left:0; right:0; top:0; bottom:32px;
+    overflow:hidden;
+    background:linear-gradient(180deg,#245ddc 0%,#3b74e4 30%,#7fb2ef 52%,#9cc4f0 58%);
+  }
+  #desktop::before{ /* rolling green hill, Bliss-style */
+    content:""; position:absolute; left:-30%; bottom:-42%;
+    width:170%; height:85%;
+    background:linear-gradient(180deg,#8ec940 0%,#4f9e2a 35%,#2f7a1c 100%);
+    border-radius:48% 52% 0 0;
+  }
+  #desktop::after{
+    content:""; position:absolute; right:-25%; bottom:-55%;
+    width:120%; height:80%;
+    background:linear-gradient(180deg,#a5d85a 0%,#5cab32 40%,#397f1f 100%);
+    border-radius:55% 45% 0 0;
+  }
+  #icons{position:absolute; left:14px; top:12px; z-index:1; display:flex; flex-direction:column; gap:16px;}
+  .icon{width:86px; text-align:center; cursor:default; outline:none;}
+  .icon-img{font-size:34px; line-height:1; filter:drop-shadow(1px 2px 2px rgba(0,0,0,.45));}
+  .icon-label{
+    margin-top:4px; padding:1px 3px; display:inline-block;
+    color:#fff; font-size:11px; text-shadow:1px 1px 2px #000;
+    border:1px dotted transparent;
+  }
+  .icon.selected .icon-label{background:var(--sel-blue); border-color:#fff; text-shadow:none;}
+
+  /* ============ Windows ============ */
+  .window{
+    position:absolute; z-index:10;
+    display:flex; flex-direction:column;
+    min-width:180px; min-height:120px;
+    background:#0a52e4; padding:0 3px 3px;
+    border:1px solid #002ea5; border-radius:8px 8px 0 0;
+    box-shadow:3px 3px 10px rgba(0,0,0,.5);
+  }
+  .window.inactive{background:#7897d6; border-color:#5a79b8;}
+  .window.maxed{border-radius:0;}
+  .titlebar{
+    flex:none; height:28px; display:flex; align-items:center; gap:5px;
+    padding:0 4px 0 6px; border-radius:7px 7px 0 0; cursor:default;
+    background:linear-gradient(180deg,#2c82f5 0%,#0a53e8 45%,#0747c6 90%,#0a59e0 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.35);
+  }
+  .window.inactive .titlebar{background:linear-gradient(180deg,#9fb5e4 0%,#7897d6 50%,#6a87c4 100%);}
+  .window.maxed .titlebar{border-radius:0;}
+  .t-icon{font-size:15px; filter:drop-shadow(0 1px 1px rgba(0,0,0,.4));}
+  .t-text{
+    flex:1; color:#fff; font-weight:bold; font-size:12px;
+    text-shadow:1px 1px 1px #0a1883;
+    overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+  .tbtn{
+    width:22px; height:22px; border-radius:3px;
+    border:1px solid rgba(255,255,255,.7);
+    color:#fff; font-size:12px; font-weight:bold; line-height:1;
+    background:linear-gradient(180deg,#8caef0 0%,#3665cb 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  .tbtn:hover{filter:brightness(1.18);}
+  .tbtn:active{filter:brightness(.85);}
+  .tbtn.close{background:linear-gradient(180deg,#f0a080 0%,#d1491f 55%,#b23312 100%);}
+  .win-body{
+    flex:1; overflow:auto; position:relative;
+    background:var(--win-face);
+    border:1px solid #808080;
+  }
+
+  /* XP-style push buttons & inputs */
+  .xpbtn{
+    padding:3px 14px; font-size:11px;
+    color:#000; background:linear-gradient(180deg,#fff 0%,#ecebe5 80%,#d8d0c4 100%);
+    border:1px solid #003c74; border-radius:3px;
+  }
+  .xpbtn:hover{box-shadow:inset 0 0 0 2px #fbd59a;}
+  .xpbtn:active{background:#e3e0d4; box-shadow:inset 1px 1px 2px rgba(0,0,0,.2);}
+
+  /* ============ Taskbar ============ */
+  #taskbar{
+    position:fixed; left:0; right:0; bottom:0; height:32px; z-index:8000;
+    display:flex; align-items:stretch;
+    background:linear-gradient(180deg,#245edc 0%,#3f8cf3 9%,#245edc 18%,#245edc 92%,#1941a5 100%);
+    border-top:1px solid #0831d9;
+  }
+  #startbtn{
+    flex:none; border:none; margin-right:10px;
+    padding:0 24px 0 14px;
+    color:#fff; font-size:17px; font-weight:bold; font-style:italic;
+    text-shadow:1px 1px 2px rgba(0,0,0,.6);
+    background:linear-gradient(180deg,#8fdb64 0%,#4aa73a 12%,#3b9a2b 55%,#2d7f20 100%);
+    border-radius:0 14px 14px 0;
+    box-shadow:2px 0 6px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.4);
+  }
+  #startbtn:hover{filter:brightness(1.1);}
+  #tasks{flex:1; display:flex; align-items:center; gap:3px; overflow:hidden; padding:0 4px;}
+  .taskbtn{
+    flex:0 1 170px; min-width:60px; height:25px;
+    display:flex; align-items:center; gap:6px;
+    padding:0 8px; border:1px solid rgba(0,10,60,.4); border-radius:3px;
+    color:#fff; font-size:11px; text-align:left;
+    background:linear-gradient(180deg,#4e8df0 0%,#2b61d0 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+    overflow:hidden; white-space:nowrap;
+  }
+  .taskbtn span{overflow:hidden; text-overflow:ellipsis;}
+  .taskbtn.active{
+    background:linear-gradient(180deg,#1c48a8 0%,#15368c 100%);
+    box-shadow:inset 1px 1px 3px rgba(0,0,0,.5);
+  }
+  #tray{
+    flex:none; display:flex; align-items:center; gap:8px;
+    padding:0 14px 0 12px; color:#fff; font-size:11px;
+    background:linear-gradient(180deg,#1290e9 0%,#19b9f3 10%,#1170d8 55%,#1248a9 100%);
+    border-left:1px solid #092e51;
+    box-shadow:inset 1px 0 2px rgba(0,0,0,.25);
+    text-shadow:0 1px 1px rgba(0,0,0,.4);
+  }
+
+  /* ============ Start menu ============ */
+  #startmenu{
+    position:fixed; left:0; bottom:32px; z-index:8500;
+    width:380px; display:none; flex-direction:column;
+    border:1px solid #0f3d8a; border-radius:6px 6px 0 0;
+    box-shadow:3px -2px 10px rgba(0,0,0,.45);
+    overflow:hidden;
+  }
+  #startmenu.open{display:flex;}
+  .sm-head{
+    height:58px; display:flex; align-items:center; gap:10px; padding:0 12px;
+    background:linear-gradient(180deg,#1b63d6 0%,#0a4bc4 50%,#0940a8 100%);
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.3);
+  }
+  .sm-head .avatar{
+    width:40px; height:40px; border-radius:6px; border:2px solid #fff;
+    background:linear-gradient(135deg,#ffd97a,#ff9d3c);
+    display:flex; align-items:center; justify-content:center; font-size:24px;
+  }
+  .sm-head .who{color:#fff; font-size:14px; font-weight:bold; text-shadow:1px 1px 1px #0a1883;}
+  .sm-cols{display:flex; min-height:240px; border-top:2px solid #e8a858;}
+  .sm-left{flex:1.2; background:#fff; padding:6px 4px;}
+  .sm-right{flex:1; background:#d3e5fa; border-left:1px solid #a6bbd8; padding:6px 4px;}
+  .sm-item{
+    display:flex; align-items:center; gap:9px;
+    padding:6px 8px; border-radius:3px; cursor:default;
+  }
+  .sm-item .i{font-size:22px; width:26px; text-align:center;}
+  .sm-item .l{font-size:12px; color:#000;}
+  .sm-item .l small{display:block; color:#777; font-size:10px;}
+  .sm-right .sm-item .l{color:#0a246a; font-weight:bold;}
+  .sm-item:hover{background:var(--sel-blue);}
+  .sm-item:hover .l, .sm-item:hover .l small{color:#fff;}
+  .sm-sep{height:1px; margin:5px 8px; background:#d8d8d8;}
+  .sm-right .sm-sep{background:#a6bbd8;}
+  .sm-foot{
+    height:40px; display:flex; align-items:center; justify-content:flex-end; gap:6px; padding:0 10px;
+    background:linear-gradient(180deg,#1b63d6 0%,#0a4bc4 50%,#0940a8 100%);
+  }
+  .sm-power{
+    display:flex; align-items:center; gap:6px;
+    border:none; background:none; color:#fff; font-size:12px;
+    padding:4px 8px; border-radius:3px;
+  }
+  .sm-power:hover{background:rgba(255,255,255,.2);}
+  .sm-power .pic{
+    width:22px; height:22px; border-radius:4px; font-size:13px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.5);
+  }
+  .sm-power .pic.off{background:linear-gradient(180deg,#f3a284,#cf3e14);}
+  .sm-power .pic.log{background:linear-gradient(180deg,#ffd97a,#e8a020);}
+
+  /* ============ App: Notepad ============ */
+  .np-body{display:flex; flex-direction:column; height:100%;}
+  .np-tools{flex:none; display:flex; gap:6px; padding:5px; border-bottom:1px solid #aca899; background:var(--win-face);}
+  .np-text{
+    flex:1; resize:none; border:none; outline:none;
+    font:13px "Lucida Console",Consolas,monospace;
+    padding:6px; background:#fff; color:#000;
+    -webkit-user-select:text; user-select:text;
+  }
+  .np-status{flex:none; padding:3px 8px; font-size:10px; color:#555; border-top:1px solid #aca899;}
+
+  /* ============ App: Calculator ============ */
+  .calc-body{display:flex; flex-direction:column; gap:7px; padding:9px; height:100%;}
+  .calc-display{
+    flex:none; height:34px; padding:0 8px;
+    display:flex; align-items:center; justify-content:flex-end;
+    font:16px "Lucida Console",Consolas,monospace;
+    background:#fff; border:1px solid #7f9db9; border-radius:2px;
+    overflow:hidden; white-space:nowrap;
+  }
+  .calc-grid{flex:1; display:grid; grid-template-columns:repeat(4,1fr); gap:6px;}
+  .calc-grid .xpbtn{padding:0; font-size:14px;}
+  .calc-grid .op{color:#c00;}
+  .calc-grid .eq{color:#039;}
+
+  /* ============ App: Paint ============ */
+  .pt-body{display:flex; flex-direction:column; height:100%;}
+  .pt-tools{
+    flex:none; display:flex; align-items:center; gap:10px; flex-wrap:wrap;
+    padding:6px; border-bottom:1px solid #aca899;
+  }
+  .pt-swatches{display:grid; grid-template-columns:repeat(8,16px); gap:2px;}
+  .pt-swatch{width:16px; height:16px; border:1px solid #555; cursor:pointer;}
+  .pt-swatch.sel{outline:2px solid #e8821e;}
+  .pt-sizes{display:flex; align-items:center; gap:6px;}
+  .pt-size{
+    width:22px; height:22px; border:1px solid #888; border-radius:3px; background:#fff;
+    display:flex; align-items:center; justify-content:center; cursor:pointer;
+  }
+  .pt-size.sel{outline:2px solid #e8821e;}
+  .pt-size i{border-radius:50%; background:#000; display:block;}
+  .pt-canvas-wrap{flex:1; overflow:auto; background:#808080; padding:8px;}
+  .pt-canvas{background:#fff; box-shadow:1px 1px 4px rgba(0,0,0,.5); cursor:crosshair; touch-action:none;}
+
+  /* ============ App: Minesweeper ============ */
+  .ms{display:inline-block; background:#c0c0c0; border:3px solid; border-color:#fff #808080 #808080 #fff; padding:7px; margin:10px;}
+  .ms-top{
+    display:flex; align-items:center; justify-content:space-between;
+    border:2px solid; border-color:#808080 #fff #fff #808080;
+    padding:5px 6px; margin-bottom:7px;
+  }
+  .ms-lcd{
+    width:54px; text-align:right; padding:1px 3px;
+    font:bold 19px "Lucida Console",Consolas,monospace;
+    color:#f00; background:#000; letter-spacing:2px;
+  }
+  .ms-face{
+    width:32px; height:32px; font-size:18px; line-height:1; padding:0;
+    background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff;
+  }
+  .ms-face:active{border-color:#808080 #fff #fff #808080;}
+  .ms-board{
+    display:grid; border:3px solid; border-color:#808080 #fff #fff #808080;
+  }
+  .ms-cell{
+    width:24px; height:24px; font-size:14px; font-weight:bold; line-height:1;
+    display:flex; align-items:center; justify-content:center;
+    background:#c0c0c0; border:2px solid; border-color:#fff #808080 #808080 #fff;
+    cursor:default;
+  }
+  .ms-cell.open{border:1px solid #9a9a9a; border-width:1px 0 0 1px;}
+  .ms-cell.boom{background:#f33;}
+  .ms-c1{color:#0000f5;} .ms-c2{color:#077a07;} .ms-c3{color:#e00000;} .ms-c4{color:#00007b;}
+  .ms-c5{color:#7b0000;} .ms-c6{color:#077a7a;} .ms-c7{color:#000;} .ms-c8{color:#7b7b7b;}
+  .ms-note{margin:0 10px 10px; font-size:11px; color:#444; max-width:240px;}
+
+  /* ============ App: info pages (My Computer / Help) ============ */
+  .page{padding:16px 18px; line-height:1.55; color:#1a1a1a; -webkit-user-select:text; user-select:text;}
+  .page h1{font-size:19px; color:#0a3f8f; font-weight:bold; margin-bottom:2px;}
+  .page h1 em{color:#e8821e; font-style:italic;}
+  .page .tag{color:#666; font-size:11px; margin-bottom:12px;}
+  .page h2{font-size:13px; color:#0a3f8f; margin:14px 0 4px; border-bottom:1px solid #b9cdf0; padding-bottom:2px;}
+  .page ul{margin-left:20px;}
+  .page li{margin:4px 0;}
+  .page p{margin:6px 0;}
+  .page .fine{font-size:10px; color:#888; margin-top:16px;}
+  kbd{
+    font-family:inherit; font-size:11px; padding:0 5px;
+    background:#fff; border:1px solid #999; border-radius:3px; box-shadow:0 1px 0 #999;
+  }
+</style>
+</head>
+<body>
+
+<div id="boot">
+  <div class="boot-logo">
+    <div class="big">Wire<em>&#9632;</em><span class="xp">XP</span></div>
+    <div class="sub">one-file edition</div>
+  </div>
+  <div class="boot-bar"><i></i></div>
+  <div class="hint">starting up&hellip; (click to skip)</div>
+</div>
+
+<div id="login" class="bluescene" style="display:none;">
+  <div class="band top"></div>
+  <div class="mid">
+    <div class="login-left">Welcome<small>To begin, click your name</small></div>
+    <div class="login-divider"></div>
+    <div class="user-tile" id="userTile">
+      <div class="avatar">&#128522;</div>
+      <div><div class="uname">Friend</div><div class="usub">Click here to log in</div></div>
+    </div>
+  </div>
+  <div class="band bottom">Wire XP &mdash; everything on this computer lives inside one file.</div>
+</div>
+
+<div id="shutdown" class="bluescene" style="display:none;">
+  <div class="band top"></div>
+  <div class="mid" style="flex-direction:column;">
+    <div class="shut-msg">It is now safe to close this window.<small>Your computer has shut down. You can close this browser tab, or&hellip;</small></div>
+    <button class="shut-btn" id="rebootBtn">Turn the computer back on</button>
+  </div>
+  <div class="band bottom">Thanks for stopping by.</div>
+</div>
+
+<div id="desktop" style="display:none;">
+  <div id="icons"></div>
+</div>
+
+<div id="startmenu">
+  <div class="sm-head"><div class="avatar">&#128522;</div><div class="who">Friend</div></div>
+  <div class="sm-cols">
+    <div class="sm-left" id="smLeft"></div>
+    <div class="sm-right" id="smRight"></div>
+  </div>
+  <div class="sm-foot">
+    <button class="sm-power" id="logoffBtn"><span class="pic log">&#8617;</span>Log Off</button>
+    <button class="sm-power" id="turnoffBtn"><span class="pic off">&#9211;</span>Turn Off Computer</button>
+  </div>
+</div>
+
+<div id="taskbar" style="display:none;">
+  <button id="startbtn">start</button>
+  <div id="tasks"></div>
+  <div id="tray"><span id="clock"></span></div>
+</div>
+
+<script>
+'use strict';
+(function(){
+
+/* ---------------- storage helpers (never let a blocked browser break the app) ---------------- */
+function store(key, val){ try{ localStorage.setItem(key, val); }catch(e){} }
+function load(key){ try{ return localStorage.getItem(key); }catch(e){ return null; } }
+
+/* ---------------- boot / login / shutdown flow ---------------- */
+const boot = document.getElementById('boot');
+const login = document.getElementById('login');
+const desktop = document.getElementById('desktop');
+const taskbar = document.getElementById('taskbar');
+const shutdown = document.getElementById('shutdown');
+
+function showLogin(){ boot.style.display='none'; login.style.display='flex'; }
+function showDesktop(){
+  login.style.display='none'; shutdown.style.display='none';
+  desktop.style.display='block'; taskbar.style.display='flex';
+}
+const bootTimer = setTimeout(showLogin, 2600);
+boot.addEventListener('click', function(){ clearTimeout(bootTimer); showLogin(); });
+
+document.getElementById('userTile').addEventListener('click', function(){
+  chime();
+  showDesktop();
+});
+document.getElementById('rebootBtn').addEventListener('click', function(){ location.reload(); });
+
+function chime(){ /* a tiny startup melody, nothing to download */
+  try{
+    const Ctx = window.AudioContext || window.webkitAudioContext;
+    if(!Ctx) return;
+    const ctx = new Ctx();
+    [[392,0],[523.25,.16],[659.25,.32],[783.99,.5]].forEach(function(n){
+      const o = ctx.createOscillator(), g = ctx.createGain();
+      o.type='sine'; o.frequency.value=n[0];
+      g.gain.setValueAtTime(0.0001, ctx.currentTime+n[1]);
+      g.gain.exponentialRampToValueAtTime(0.07, ctx.currentTime+n[1]+0.03);
+      g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime+n[1]+0.55);
+      o.connect(g); g.connect(ctx.destination);
+      o.start(ctx.currentTime+n[1]); o.stop(ctx.currentTime+n[1]+0.6);
+    });
+  }catch(e){}
+}
+
+/* ---------------- clock ---------------- */
+const clockEl = document.getElementById('clock');
+function tickClock(){
+  const d = new Date();
+  let h = d.getHours(); const m = d.getMinutes();
+  const ap = h >= 12 ? 'PM' : 'AM';
+  h = h % 12 || 12;
+  clockEl.textContent = h + ':' + (m<10?'0':'') + m + ' ' + ap;
+  clockEl.title = d.toDateString();
+}
+tickClock(); setInterval(tickClock, 10000);
+
+/* ---------------- window manager ---------------- */
+let zTop = 20;
+let cascade = 0;
+const openWins = {};   // appId -> {win, taskbtn}
+let focused = null;
+
+function focusWin(appId){
+  Object.keys(openWins).forEach(function(id){
+    const o = openWins[id];
+    o.win.classList.toggle('inactive', id !== appId);
+    o.taskbtn.classList.toggle('active', id !== appId ? false : o.win.style.display !== 'none');
+  });
+  const o = openWins[appId];
+  if(o){ o.win.style.zIndex = ++zTop; focused = appId; }
+}
+
+function minimizeWin(appId){
+  const o = openWins[appId]; if(!o) return;
+  o.win.style.display = 'none';
+  o.taskbtn.classList.remove('active');
+}
+function restoreWin(appId){
+  const o = openWins[appId]; if(!o) return;
+  o.win.style.display = 'flex';
+  focusWin(appId);
+}
+function closeWin(appId){
+  const o = openWins[appId]; if(!o) return;
+  o.win.remove(); o.taskbtn.remove();
+  delete openWins[appId];
+  if(focused === appId){
+    focused = null;
+    const ids = Object.keys(openWins);
+    if(ids.length) focusWin(ids[ids.length-1]);
+  }
+}
+function toggleMax(appId){
+  const o = openWins[appId]; if(!o) return;
+  const w = o.win;
+  if(w.classList.contains('maxed')){
+    w.classList.remove('maxed');
+    w.style.left = w.dataset.px; w.style.top = w.dataset.py;
+    w.style.width = w.dataset.pw; w.style.height = w.dataset.ph;
+  }else{
+    w.dataset.px = w.style.left; w.dataset.py = w.style.top;
+    w.dataset.pw = w.style.width; w.dataset.ph = w.style.height;
+    w.classList.add('maxed');
+    w.style.left='0'; w.style.top='0';
+    w.style.width='100%'; w.style.height='100%';
+  }
+}
+
+function openApp(appId){
+  closeStartMenu();
+  const app = APPS[appId]; if(!app) return;
+  if(openWins[appId]){ restoreWin(appId); return; }
+
+  const win = document.createElement('div');
+  win.className = 'window';
+  win.style.width = app.w + 'px';
+  win.style.height = app.h + 'px';
+  const deskW = desktop.clientWidth, deskH = desktop.clientHeight;
+  const x = Math.max(4, Math.min(90 + cascade*28, deskW - app.w - 8));
+  const y = Math.max(4, Math.min(36 + cascade*26, deskH - app.h - 8));
+  cascade = (cascade + 1) % 8;
+  win.style.left = x + 'px'; win.style.top = y + 'px';
+
+  const bar = document.createElement('div');
+  bar.className = 'titlebar';
+  bar.innerHTML = '<span class="t-icon"></span><span class="t-text"></span>';
+  bar.querySelector('.t-icon').textContent = app.icon;
+  bar.querySelector('.t-text').textContent = app.title;
+  const btnMin = mkBtn('–','Minimize'), btnMax = mkBtn('□','Maximize'), btnX = mkBtn('✕','Close');
+  btnX.classList.add('close');
+  bar.appendChild(btnMin); bar.appendChild(btnMax); bar.appendChild(btnX);
+  function mkBtn(t, tip){ const b=document.createElement('button'); b.className='tbtn'; b.textContent=t; b.title=tip; return b; }
+
+  const body = document.createElement('div');
+  body.className = 'win-body';
+
+  win.appendChild(bar); win.appendChild(body);
+  desktop.appendChild(win);
+
+  const taskbtn = document.createElement('button');
+  taskbtn.className = 'taskbtn';
+  taskbtn.innerHTML = '<span></span>';
+  taskbtn.firstChild.textContent = app.icon + ' ' + app.title;
+  document.getElementById('tasks').appendChild(taskbtn);
+
+  openWins[appId] = {win: win, taskbtn: taskbtn};
+
+  btnMin.addEventListener('click', function(e){ e.stopPropagation(); minimizeWin(appId); });
+  btnMax.addEventListener('click', function(e){ e.stopPropagation(); toggleMax(appId); });
+  btnX.addEventListener('click', function(e){ e.stopPropagation(); closeWin(appId); });
+  bar.addEventListener('dblclick', function(e){ if(!e.target.classList.contains('tbtn')) toggleMax(appId); });
+  win.addEventListener('pointerdown', function(){ focusWin(appId); });
+  taskbtn.addEventListener('click', function(){
+    if(openWins[appId].win.style.display === 'none'){ restoreWin(appId); }
+    else if(focused === appId){ minimizeWin(appId); }
+    else { focusWin(appId); }
+  });
+
+  // drag by title bar
+  bar.addEventListener('pointerdown', function(e){
+    if(e.target.classList.contains('tbtn') || win.classList.contains('maxed')) return;
+    e.preventDefault();
+    const sx = e.clientX - win.offsetLeft, sy = e.clientY - win.offsetTop;
+    function move(ev){
+      let nx = ev.clientX - sx, ny = ev.clientY - sy;
+      nx = Math.max(-win.offsetWidth + 60, Math.min(nx, desktop.clientWidth - 60));
+      ny = Math.max(0, Math.min(ny, desktop.clientHeight - 28));
+      win.style.left = nx + 'px'; win.style.top = ny + 'px';
+    }
+    function up(){
+      document.removeEventListener('pointermove', move);
+      document.removeEventListener('pointerup', up);
+    }
+    document.addEventListener('pointermove', move);
+    document.addEventListener('pointerup', up);
+  });
+
+  app.render(body);
+  focusWin(appId);
+}
+
+/* ---------------- app: Notepad ---------------- */
+function renderNotepad(body){
+  body.innerHTML =
+    '<div class="np-body">' +
+      '<div class="np-tools">' +
+        '<button class="xpbtn" data-act="new">New</button>' +
+        '<button class="xpbtn" data-act="open">Open&hellip;</button>' +
+        '<button class="xpbtn" data-act="save">Save to my computer</button>' +
+        '<input type="file" accept=".txt,text/plain" style="display:none">' +
+      '</div>' +
+      '<textarea class="np-text" spellcheck="false" placeholder="Type anything here. It is saved automatically while you type."></textarea>' +
+      '<div class="np-status">Saved automatically in this browser. &ldquo;Save to my computer&rdquo; downloads a real .txt file.</div>' +
+    '</div>';
+  const ta = body.querySelector('.np-text');
+  const fileInput = body.querySelector('input[type=file]');
+  ta.value = load('wirexp-notepad') || '';
+  ta.addEventListener('input', function(){ store('wirexp-notepad', ta.value); });
+  body.querySelector('.np-tools').addEventListener('click', function(e){
+    const act = e.target.dataset && e.target.dataset.act;
+    if(act === 'new'){
+      if(!ta.value || confirm('Clear the page and start a new note?')){ ta.value=''; store('wirexp-notepad',''); }
+    }else if(act === 'open'){
+      fileInput.click();
+    }else if(act === 'save'){
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(new Blob([ta.value], {type:'text/plain'}));
+      a.download = 'my-note.txt';
+      a.click();
+      setTimeout(function(){ URL.revokeObjectURL(a.href); }, 2000);
+    }
+  });
+  fileInput.addEventListener('change', function(){
+    const f = fileInput.files[0]; if(!f) return;
+    const r = new FileReader();
+    r.onload = function(){ ta.value = String(r.result); store('wirexp-notepad', ta.value); };
+    r.readAsText(f);
+    fileInput.value = '';
+  });
+}
+
+/* ---------------- app: Calculator ---------------- */
+function renderCalculator(body){
+  body.innerHTML =
+    '<div class="calc-body"><div class="calc-display">0</div><div class="calc-grid"></div></div>';
+  const disp = body.querySelector('.calc-display');
+  const grid = body.querySelector('.calc-grid');
+  const keys = ['CE','C','←','÷','7','8','9','×','4','5','6','−','1','2','3','+','±','0','.','='];
+  keys.forEach(function(k){
+    const b = document.createElement('button');
+    b.className = 'xpbtn' + ('÷×−+'.indexOf(k) >= 0 ? ' op' : '') + (k === '=' ? ' eq' : '');
+    b.textContent = k;
+    grid.appendChild(b);
+  });
+  let acc = null, op = null, fresh = true;
+  function show(v){
+    let s = typeof v === 'number' ? String(+v.toPrecision(12)) : v;
+    if(s.length > 16) s = s.slice(0, 16);
+    disp.textContent = s;
+  }
+  function cur(){ return parseFloat(disp.textContent) || 0; }
+  function apply(a, o, b){
+    if(o === '+') return a + b;
+    if(o === '−') return a - b;
+    if(o === '×') return a * b;
+    if(o === '÷') return b === 0 ? NaN : a / b;
+    return b;
+  }
+  grid.addEventListener('click', function(e){
+    if(e.target.tagName !== 'BUTTON') return;
+    const k = e.target.textContent;
+    if(k >= '0' && k <= '9'){
+      if(fresh){ disp.textContent = k; fresh = false; }
+      else if(disp.textContent.length < 16){ disp.textContent = (disp.textContent === '0' ? k : disp.textContent + k); }
+    }else if(k === '.'){
+      if(fresh){ disp.textContent = '0.'; fresh = false; }
+      else if(disp.textContent.indexOf('.') < 0){ disp.textContent += '.'; }
+    }else if(k === '±'){
+      if(disp.textContent !== '0') disp.textContent = disp.textContent.startsWith('-') ? disp.textContent.slice(1) : '-' + disp.textContent;
+    }else if(k === '←'){
+      if(!fresh){ disp.textContent = disp.textContent.length > 1 ? disp.textContent.slice(0,-1) : '0'; }
+    }else if(k === 'CE'){
+      disp.textContent = '0'; fresh = true;
+    }else if(k === 'C'){
+      disp.textContent = '0'; acc = null; op = null; fresh = true;
+    }else if(k === '='){
+      if(op !== null){
+        const r = apply(acc, op, cur());
+        if(isNaN(r)){ show('Cannot divide by 0'); acc = null; op = null; }
+        else { show(r); acc = null; op = null; }
+        fresh = true;
+      }
+    }else{ // an operator
+      if(op !== null && !fresh){
+        const r = apply(acc, op, cur());
+        if(isNaN(r)){ show('Cannot divide by 0'); acc = null; op = null; fresh = true; return; }
+        show(r); acc = r;
+      }else{
+        acc = cur();
+      }
+      op = k; fresh = true;
+    }
+  });
+}
+
+/* ---------------- app: Paint ---------------- */
+function renderPaint(body){
+  body.innerHTML =
+    '<div class="pt-body">' +
+      '<div class="pt-tools">' +
+        '<div class="pt-swatches"></div>' +
+        '<div class="pt-sizes"></div>' +
+        '<button class="xpbtn" data-act="eraser">Eraser</button>' +
+        '<button class="xpbtn" data-act="clear">Clear</button>' +
+        '<button class="xpbtn" data-act="save">Save picture</button>' +
+      '</div>' +
+      '<div class="pt-canvas-wrap"><canvas class="pt-canvas" width="520" height="300"></canvas></div>' +
+    '</div>';
+  const colors = ['#000000','#7b7b7b','#7b0000','#7b7b00','#007b00','#007b7b','#00007b','#7b007b',
+                  '#ffffff','#bdbdbd','#ff0000','#ffff00','#00c000','#00ffff','#0000ff','#ff00ff'];
+  const sizes = [2,5,9,16];
+  const sw = body.querySelector('.pt-swatches');
+  const sz = body.querySelector('.pt-sizes');
+  const canvas = body.querySelector('.pt-canvas');
+  const ctx = canvas.getContext('2d');
+  ctx.fillStyle = '#fff'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  let color = '#000000', size = 5, eraser = false;
+
+  colors.forEach(function(c, i){
+    const d = document.createElement('div');
+    d.className = 'pt-swatch' + (i === 0 ? ' sel' : '');
+    d.style.background = c; d.dataset.c = c; d.title = c;
+    sw.appendChild(d);
+  });
+  sw.addEventListener('click', function(e){
+    const c = e.target.dataset && e.target.dataset.c; if(!c) return;
+    color = c; eraser = false;
+    sw.querySelectorAll('.pt-swatch').forEach(function(s){ s.classList.toggle('sel', s === e.target); });
+  });
+  sizes.forEach(function(s, i){
+    const d = document.createElement('div');
+    d.className = 'pt-size' + (i === 1 ? ' sel' : '');
+    d.dataset.s = s; d.title = s + ' px';
+    d.innerHTML = '<i style="width:' + Math.min(s,14) + 'px;height:' + Math.min(s,14) + 'px"></i>';
+    sz.appendChild(d);
+  });
+  sz.addEventListener('click', function(e){
+    const t = e.target.closest('.pt-size'); if(!t) return;
+    size = +t.dataset.s;
+    sz.querySelectorAll('.pt-size').forEach(function(s){ s.classList.toggle('sel', s === t); });
+  });
+  body.querySelector('.pt-tools').addEventListener('click', function(e){
+    const act = e.target.dataset && e.target.dataset.act;
+    if(act === 'clear'){ ctx.fillStyle='#fff'; ctx.fillRect(0,0,canvas.width,canvas.height); }
+    else if(act === 'eraser'){ eraser = true; sw.querySelectorAll('.pt-swatch').forEach(function(s){ s.classList.remove('sel'); }); }
+    else if(act === 'save'){
+      const a = document.createElement('a');
+      a.href = canvas.toDataURL('image/png');
+      a.download = 'my-painting.png';
+      a.click();
+    }
+  });
+
+  let drawing = false;
+  function pos(e){
+    const r = canvas.getBoundingClientRect();
+    return [ (e.clientX - r.left) * (canvas.width / r.width),
+             (e.clientY - r.top) * (canvas.height / r.height) ];
+  }
+  canvas.addEventListener('pointerdown', function(e){
+    e.preventDefault();
+    drawing = true;
+    canvas.setPointerCapture(e.pointerId);
+    const p = pos(e);
+    ctx.strokeStyle = eraser ? '#fff' : color;
+    ctx.lineWidth = eraser ? size * 2.5 : size;
+    ctx.beginPath(); ctx.moveTo(p[0], p[1]); ctx.lineTo(p[0]+0.01, p[1]+0.01); ctx.stroke();
+  });
+  canvas.addEventListener('pointermove', function(e){
+    if(!drawing) return;
+    const p = pos(e);
+    ctx.lineTo(p[0], p[1]); ctx.stroke();
+  });
+  canvas.addEventListener('pointerup', function(){ drawing = false; });
+  canvas.addEventListener('pointercancel', function(){ drawing = false; });
+}
+
+/* ---------------- app: Minesweeper ---------------- */
+function renderMinesweeper(body){
+  const W = 9, H = 9, M = 10;
+  body.innerHTML =
+    '<div style="text-align:center"><div class="ms">' +
+      '<div class="ms-top"><div class="ms-lcd ms-flags"></div><button class="ms-face">&#128578;</button><div class="ms-lcd ms-time"></div></div>' +
+      '<div class="ms-board" style="grid-template-columns:repeat(' + W + ',24px)"></div>' +
+    '</div>' +
+    '<div class="ms-note">Click a square to dig. Right-click to plant a flag &#128681; where you think a mine hides. Clear every safe square to win!</div></div>';
+  const boardEl = body.querySelector('.ms-board');
+  const face = body.querySelector('.ms-face');
+  const lcdFlags = body.querySelector('.ms-flags');
+  const lcdTime = body.querySelector('.ms-time');
+
+  let mines, opened, flags, started, over, time, timerId, cells;
+
+  function lcd(el, n){ el.textContent = String(Math.max(-99, Math.min(999, n))).padStart(3, '0'); }
+  function neighbors(i){
+    const x = i % W, y = (i - x) / W, out = [];
+    for(let dy = -1; dy <= 1; dy++) for(let dx = -1; dx <= 1; dx++){
+      if(!dx && !dy) continue;
+      const nx = x + dx, ny = y + dy;
+      if(nx >= 0 && nx < W && ny >= 0 && ny < H) out.push(ny * W + nx);
+    }
+    return out;
+  }
+  function reset(){
+    mines = {}; opened = {}; flags = {};
+    started = false; over = false; time = 0;
+    clearInterval(timerId);
+    face.textContent = '\u{1F642}';
+    lcd(lcdFlags, M); lcd(lcdTime, 0);
+    boardEl.innerHTML = '';
+    cells = [];
+    for(let i = 0; i < W * H; i++){
+      const c = document.createElement('div');
+      c.className = 'ms-cell'; c.dataset.i = i;
+      boardEl.appendChild(c); cells.push(c);
+    }
+  }
+  function placeMines(firstI){
+    const banned = {}; banned[firstI] = 1;
+    neighbors(firstI).forEach(function(n){ banned[n] = 1; });
+    let placed = 0;
+    while(placed < M){
+      const i = Math.floor(Math.random() * W * H);
+      if(banned[i] || mines[i]) continue;
+      mines[i] = 1; placed++;
+    }
+  }
+  function countAround(i){
+    return neighbors(i).reduce(function(s, n){ return s + (mines[n] ? 1 : 0); }, 0);
+  }
+  function openCell(i){
+    if(over || opened[i] || flags[i]) return;
+    if(!started){
+      started = true;
+      placeMines(i);
+      timerId = setInterval(function(){ time = Math.min(999, time + 1); lcd(lcdTime, time); }, 1000);
+    }
+    if(mines[i]){ return lose(i); }
+    const queue = [i];
+    while(queue.length){
+      const q = queue.pop();
+      if(opened[q] || flags[q]) continue;
+      opened[q] = 1;
+      const n = countAround(q);
+      const c = cells[q];
+      c.classList.add('open');
+      if(n > 0){ c.textContent = n; c.classList.add('ms-c' + n); }
+      else { neighbors(q).forEach(function(nb){ if(!opened[nb] && !mines[nb]) queue.push(nb); }); }
+    }
+    checkWin();
+  }
+  function lose(hitI){
+    over = true; clearInterval(timerId);
+    face.textContent = '\u{1F635}';
+    for(let i = 0; i < W * H; i++){
+      if(mines[i]){ cells[i].classList.add('open'); cells[i].textContent = '\u{1F4A3}'; }
+      else if(flags[i]){ cells[i].textContent = '❌'; }
+    }
+    cells[hitI].classList.add('boom');
+  }
+  function checkWin(){
+    if(Object.keys(opened).length === W * H - M){
+      over = true; clearInterval(timerId);
+      face.textContent = '\u{1F60E}';
+      lcd(lcdFlags, 0);
+      for(let i = 0; i < W * H; i++) if(mines[i]) cells[i].textContent = '\u{1F6A9}';
+    }
+  }
+  boardEl.addEventListener('click', function(e){
+    const t = e.target.closest('.ms-cell'); if(!t) return;
+    openCell(+t.dataset.i);
+  });
+  boardEl.addEventListener('contextmenu', function(e){
+    e.preventDefault();
+    const t = e.target.closest('.ms-cell'); if(!t || over) return;
+    const i = +t.dataset.i;
+    if(opened[i]) return;
+    if(flags[i]){ delete flags[i]; t.textContent = ''; }
+    else { flags[i] = 1; t.textContent = '\u{1F6A9}'; }
+    lcd(lcdFlags, M - Object.keys(flags).length);
+  });
+  face.addEventListener('click', reset);
+  reset();
+}
+
+/* ---------------- app: My Computer ---------------- */
+function renderMyComputer(body){
+  body.innerHTML =
+    '<div class="page">' +
+      '<h1>Wire <em>XP</em></h1>' +
+      '<div class="tag">One-file Edition &middot; Version 2026</div>' +
+      '<h2>About this computer</h2>' +
+      '<p>Everything you see &mdash; the desktop, the programs, the games &mdash; lives inside a single file called <b>WireXP.html</b>. There is nothing to install, no setup, and no internet needed.</p>' +
+      '<h2>System information</h2>' +
+      '<ul>' +
+        '<li><b>Processor:</b> your web browser (it does all the work)</li>' +
+        '<li><b>Installed programs:</b> Notepad, Calculator, Paint, Minesweeper</li>' +
+        '<li><b>Hard drive:</b> 1 file, 100% portable</li>' +
+      '</ul>' +
+      '<h2>Moving it around</h2>' +
+      '<p>You can copy <b>WireXP.html</b> to a USB stick, a different folder, or another computer &mdash; it will work exactly the same. Double-click it anywhere to start.</p>' +
+      '<p class="fine">Wire XP is a loving homage to a classic desktop look. It is not affiliated with Microsoft.</p>' +
+    '</div>';
+}
+
+/* ---------------- app: Help ---------------- */
+function renderHelp(body){
+  body.innerHTML =
+    '<div class="page">' +
+      '<h1>Help and Support</h1>' +
+      '<div class="tag">How to use Wire XP</div>' +
+      '<h2>The basics</h2>' +
+      '<ul>' +
+        '<li><b>Open a program:</b> double-click an icon on the desktop, or click <b>start</b> in the bottom-left corner and pick one.</li>' +
+        '<li><b>Move a window:</b> hold the blue bar at the top of the window and drag it.</li>' +
+        '<li><b>The three buttons</b> in each window&rsquo;s corner: <kbd>&ndash;</kbd> hides it on the bottom bar, <kbd>&#9633;</kbd> makes it fill the screen, <kbd>&#10005;</kbd> closes it.</li>' +
+        '<li><b>Bring a hidden window back:</b> click its button on the bar at the bottom of the screen.</li>' +
+      '</ul>' +
+      '<h2>Saving your work</h2>' +
+      '<p>Notepad remembers what you typed automatically, even after you close everything. &ldquo;Save to my computer&rdquo; in Notepad and &ldquo;Save picture&rdquo; in Paint download a real file to your Downloads folder that you can keep or share.</p>' +
+      '<h2>Turning it off</h2>' +
+      '<p>Click <b>start</b> &rarr; <b>Turn Off Computer</b>, or simply close the browser tab. Nothing bad happens either way.</p>' +
+      '<h2>If something looks stuck</h2>' +
+      '<p>Press <kbd>F5</kbd> (or the browser&rsquo;s reload button) to restart the computer. Your Notepad text survives a restart.</p>' +
+    '</div>';
+}
+
+/* ---------------- app registry, icons, start menu ---------------- */
+const APPS = {
+  mycomputer:  {title:'My Computer',       icon:'\u{1F4BB}', w:470, h:430, render: renderMyComputer},
+  notepad:     {title:'Notepad',           icon:'\u{1F4DD}', w:430, h:340, render: renderNotepad},
+  calculator:  {title:'Calculator',        icon:'\u{1F9EE}', w:250, h:330, render: renderCalculator},
+  paint:       {title:'Paint',             icon:'\u{1F3A8}', w:570, h:420, render: renderPaint},
+  minesweeper: {title:'Minesweeper',       icon:'\u{1F4A3}', w:280, h:420, render: renderMinesweeper},
+  help:        {title:'Help and Support',  icon:'❓',    w:470, h:430, render: renderHelp}
+};
+const DESKTOP_ORDER = ['mycomputer','notepad','calculator','paint','minesweeper','help'];
+const START_LEFT = ['notepad','calculator','paint','minesweeper'];
+const START_RIGHT = ['mycomputer','help'];
+
+const iconsEl = document.getElementById('icons');
+DESKTOP_ORDER.forEach(function(id){
+  const app = APPS[id];
+  const d = document.createElement('div');
+  d.className = 'icon'; d.tabIndex = 0; d.dataset.app = id;
+  d.innerHTML = '<div class="icon-img"></div><div class="icon-label"></div>';
+  d.querySelector('.icon-img').textContent = app.icon;
+  d.querySelector('.icon-label').textContent = app.title;
+  iconsEl.appendChild(d);
+  d.addEventListener('click', function(){
+    iconsEl.querySelectorAll('.icon').forEach(function(i){ i.classList.toggle('selected', i === d); });
+  });
+  d.addEventListener('dblclick', function(){ openApp(id); });
+  d.addEventListener('keydown', function(e){ if(e.key === 'Enter') openApp(id); });
+});
+desktop.addEventListener('click', function(e){
+  if(e.target === desktop) iconsEl.querySelectorAll('.icon').forEach(function(i){ i.classList.remove('selected'); });
+});
+
+const startmenu = document.getElementById('startmenu');
+const startbtn = document.getElementById('startbtn');
+function fillMenu(elId, ids){
+  const el = document.getElementById(elId);
+  ids.forEach(function(id){
+    const app = APPS[id];
+    const d = document.createElement('div');
+    d.className = 'sm-item';
+    d.innerHTML = '<span class="i"></span><span class="l"></span>';
+    d.querySelector('.i').textContent = app.icon;
+    d.querySelector('.l').textContent = app.title;
+    d.addEventListener('click', function(){ openApp(id); });
+    el.appendChild(d);
+  });
+}
+fillMenu('smLeft', START_LEFT);
+fillMenu('smRight', START_RIGHT);
+
+function closeStartMenu(){ startmenu.classList.remove('open'); }
+startbtn.addEventListener('click', function(e){
+  e.stopPropagation();
+  startmenu.classList.toggle('open');
+});
+document.addEventListener('pointerdown', function(e){
+  if(!startmenu.contains(e.target) && e.target !== startbtn) closeStartMenu();
+});
+
+document.getElementById('turnoffBtn').addEventListener('click', function(){
+  closeStartMenu();
+  shutdown.style.display = 'flex';
+});
+document.getElementById('logoffBtn').addEventListener('click', function(){ location.reload(); });
+
+})();
+</script>
+</body>
+</html>
